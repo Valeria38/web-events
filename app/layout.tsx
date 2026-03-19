@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Schibsted_Grotesk, Martian_Mono } from "next/font/google";
+import { Schibsted_Grotesk, Martian_Mono } from "next/font/google";
 import "./globals.css";
 import LightRays from "@/components/bg/LightRays";
 import Navbar from "@/components/Navbar";

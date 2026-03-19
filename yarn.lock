@@ -2419,6 +2419,11 @@ json5@^2.2.3:
     object.assign "^4.1.4"
     object.values "^1.1.6"
 
+kareem@3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/kareem/-/kareem-3.2.0.tgz#8f69b25f9ceac80e9bc46b391008da7fc93d4ab0"
+  integrity sha512-VS8MWZz/cT+SqBCpVfNN4zoVz5VskR3N4+sTmUXme55e9avQHntpwpNq0yjnosISXqwJ3AQVjlbI4Dyzv//JtA==
+
 keyv@^4.5.4:
   version "4.5.4"
   resolved "https://registry.yarnpkg.com/keyv/-/keyv-4.5.4.tgz#a879a99e29452f942439f2a405e3af8b31d4de93"
@@ -2608,7 +2613,7 @@ mongodb-connection-string-url@^7.0.0:
     "@types/whatwg-url" "^13.0.0"
     whatwg-url "^14.1.0"
 
-mongodb@^7.1.0:
+mongodb@^7.1.0, mongodb@~7.1:
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-7.1.0.tgz#c13640259d30cdf9c3936aaa003f0d0c0a34fa9b"
   integrity sha512-kMfnKunbolQYwCIyrkxNJFB4Ypy91pYqua5NargS/f8ODNSJxT03ZU3n1JqL4mCzbSih8tvmMEMLpKTT7x5gCg==
@@ -2617,7 +2622,29 @@ mongodb@^7.1.0:
     bson "^7.1.1"
     mongodb-connection-string-url "^7.0.0"
 
-ms@^2.1.1, ms@^2.1.3:
+mongoose@^9.3.1:
+  version "9.3.1"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-9.3.1.tgz#949040a198d7b55ce5b58a339312be00961e900f"
+  integrity sha512-58DuQti+LlRS74/UfWN4F3wZsC0Yr1dgTWZ2Wd3/TuSvm6rIdyAjDWbx2xGyuBooqJYdAWotVv4mQgVdivh+3Q==
+  dependencies:
+    kareem "3.2.0"
+    mongodb "~7.1"
+    mpath "0.9.0"
+    mquery "6.0.0"
+    ms "2.1.3"
+    sift "17.1.3"
+
+mpath@0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/mpath/-/mpath-0.9.0.tgz#0c122fe107846e31fc58c75b09c35514b3871904"
+  integrity sha512-ikJRQTk8hw5DEoFVxHG1Gn9T/xcjtdnOKIU1JTmGjZZlg9LST2mBLmcX3/ICIbgJydT2GOc15RnNy5mHmzfSew==
+
+mquery@6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/mquery/-/mquery-6.0.0.tgz#ef6d744619ff13368c1b137d09a7adc5530fce9e"
+  integrity sha512-b2KQNsmgtkscfeDgkYMcWGn9vZI9YoXh802VDEwE6qc50zxBFQ0Oo8ROkawbPAsXCY1/Z1yp0MagqsZStPWJjw==
+
+ms@2.1.3, ms@^2.1.1, ms@^2.1.3:
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.3.tgz#574c8138ce1d2b5861f0b44579dbadd60c6615b2"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
@@ -3156,6 +3183,11 @@ side-channel@^1.1.0:
     side-channel-list "^1.0.0"
     side-channel-map "^1.0.1"
     side-channel-weakmap "^1.0.2"
+
+sift@17.1.3:
+  version "17.1.3"
+  resolved "https://registry.yarnpkg.com/sift/-/sift-17.1.3.tgz#9d2000d4d41586880b0079b5183d839c7a142bf7"
+  integrity sha512-Rtlj66/b0ICeFzYTuNvX/EF1igRbbnGSvEyT79McoZa/DeGhMyC5pWKOEsZKnpkqtSeovd5FL/bjHWC3CIIvCQ==
 
 source-map-js@^1.0.2, source-map-js@^1.2.1:
   version "1.2.1"

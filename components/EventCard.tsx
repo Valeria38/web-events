@@ -6,14 +6,14 @@ import posthog from "posthog-js";
 
 interface Props {
     title: string;
-    imageUrl: string;
+    image: string;
     slug: string;
     location: string;
     date: string;
     time: string;
 }
 
-const EventCard = ({ title, imageUrl, slug, location, date, time }: Props) => {
+const EventCard = ({ title, image, slug, location, date, time }: Props) => {
     const handleClick = () => {
         posthog.capture("event_card_clicked", {
             event_title: title,
@@ -24,47 +24,47 @@ const EventCard = ({ title, imageUrl, slug, location, date, time }: Props) => {
     };
 
     return (
-        // <Link href={"/events"} id="event-card">
-        <div onClick={handleClick}>
-            <Image
-                src={imageUrl}
-                alt="Event image"
-                width={410}
-                height={300}
-                className="poster"
-            />
-            <div className="flex flex-row gap-2">
+        <Link href={`/events/${slug}`} id="event-card">
+            <div onClick={handleClick}>
                 <Image
-                    src="/icons/pin.svg"
-                    alt="location"
-                    width={14}
-                    height={14}
+                    src={image}
+                    alt="Event image"
+                    width={410}
+                    height={300}
+                    className="poster"
                 />
-                <p>{location}</p>
-                <div className="datetime">
-                    <div>
-                        <Image
-                            src="/icons/calendar.svg"
-                            alt="location"
-                            width={14}
-                            height={14}
-                        />
-                        <p>{date}</p>
-                    </div>
-                    <div>
-                        <Image
-                            src="/icons/clock.svg"
-                            alt="location"
-                            width={14}
-                            height={14}
-                        />
-                        <p>{time}</p>
+                <div className="flex flex-row gap-2">
+                    <Image
+                        src="/icons/pin.svg"
+                        alt="location"
+                        width={14}
+                        height={14}
+                    />
+                    <p>{location}</p>
+                    <div className="datetime">
+                        <div>
+                            <Image
+                                src="/icons/calendar.svg"
+                                alt="location"
+                                width={14}
+                                height={14}
+                            />
+                            <p>{date}</p>
+                        </div>
+                        <div>
+                            <Image
+                                src="/icons/clock.svg"
+                                alt="location"
+                                width={14}
+                                height={14}
+                            />
+                            <p>{time}</p>
+                        </div>
                     </div>
                 </div>
+                <p className="title">{title}</p>
             </div>
-            <p className="title">{title}</p>
-        </div>
-        // </Link>
+        </Link>
     );
 };
 

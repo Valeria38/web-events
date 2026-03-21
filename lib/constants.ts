@@ -1,5 +1,5 @@
 export type EventItem = {
-    imageUrl: string;
+    image: string;
     title: string;
     slug: string;
     location: string;
@@ -9,7 +9,7 @@ export type EventItem = {
 
 export const events: EventItem[] = [
     {
-        imageUrl: "/images/event1.png",
+        image: "/images/event1.png",
         title: "React Summit US 2025",
         slug: "react-summit-us-2025",
         location: "San Francisco, CA, USA",
@@ -17,7 +17,7 @@ export const events: EventItem[] = [
         time: "09:00 AM",
     },
     {
-        imageUrl: "/images/event2.png",
+        image: "/images/event2.png",
         title: "KubeCon + CloudNativeCon Europe 2026",
         slug: "kubecon-cloudnativecon-eu-2026",
         location: "Vienna, Austria",
@@ -25,7 +25,7 @@ export const events: EventItem[] = [
         time: "10:00 AM",
     },
     {
-        imageUrl: "/images/event3.png",
+        image: "/images/event3.png",
         title: "AWS re:Invent 2025",
         slug: "aws-reinvent-2025",
         location: "Las Vegas, NV, USA",
@@ -33,7 +33,7 @@ export const events: EventItem[] = [
         time: "08:30 AM",
     },
     {
-        imageUrl: "/images/event4.png",
+        image: "/images/event4.png",
         title: "Next.js Conf 2025",
         slug: "nextjs-conf-2025",
         location: "Los Angeles, CA, USA (Hybrid)",
@@ -41,7 +41,7 @@ export const events: EventItem[] = [
         time: "09:30 AM",
     },
     {
-        imageUrl: "/images/event5.png",
+        image: "/images/event5.png",
         title: "Google Cloud Next 2026",
         slug: "google-cloud-next-2026",
         location: "San Jose, CA, USA",
@@ -49,7 +49,7 @@ export const events: EventItem[] = [
         time: "09:00 AM",
     },
     {
-        imageUrl: "/images/event6.png",
+        image: "/images/event6.png",
         title: "ETHGlobal Hackathon: Paris 2026",
         slug: "ethglobal-paris-2026",
         location: "Paris, France",
@@ -57,7 +57,7 @@ export const events: EventItem[] = [
         time: "10:00 AM",
     },
     {
-        imageUrl: "/images/event-full.png",
+        image: "/images/event-full.png",
         title: "Open Source Summit North America 2026",
         slug: "oss-na-2026",
         location: "Vancouver, Canada",

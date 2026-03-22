@@ -1,4 +1,7 @@
 import BookEvent from "@/components/BookEvent";
+import EventCard from "@/components/EventCard";
+import { IEvent } from "@/db";
+import { getSimilarEventsBySlug } from "@/lib/actions/event.actions";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
@@ -82,6 +85,9 @@ const EventDetails = async ({
         tags,
     } = event;
 
+    const similarEvents: IEvent[] = await getSimilarEventsBySlug(slug);
+    console.log("similarEvents", similarEvents);
+
     return (
         <section id="event">
             <div className="header">
@@ -130,12 +136,12 @@ const EventDetails = async ({
                             label={audience}
                         />
                     </section>
-                    <EventAgenda agendaItems={JSON.parse(agenda[0])} />
+                    <EventAgenda agendaItems={agenda} />
                     <section className="flex-col-gap-2">
                         <h2>About the organizer</h2>
                         <p>{organizer}</p>
                     </section>
-                    <EventTags tags={JSON.parse(tags[0])} />
+                    <EventTags tags={tags} />
                 </div>
                 {/* booking form*/}
                 <aside className="booking">
@@ -154,6 +160,23 @@ const EventDetails = async ({
                         <BookEvent />
                     </div>
                 </aside>
+            </div>
+            <div className="flex w-full flex-col gap-4 pt-20">
+                <h2>Similar events</h2>
+                <div className="events">
+                    {similarEvents.length &&
+                        similarEvents.map((event: IEvent) => (
+                            <EventCard
+                                key={event.title}
+                                title={event.title}
+                                image={event.image}
+                                slug={event.slug}
+                                location={event.location}
+                                date={event.date}
+                                time={event.time}
+                            />
+                        ))}
+                </div>
             </div>
         </section>
     );

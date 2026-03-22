@@ -5,8 +5,7 @@ import posthog from "posthog-js";
 
 const ExploreBtn = () => {
     const handleClick = () => {
-        console.log("click");
-        posthog.capture("explore_events_clicked");
+        // posthog.capture("explore_events_clicked");
     };
 
     return (

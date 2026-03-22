@@ -4,8 +4,8 @@ import { IEvent } from "@/db";
 import { cacheLife } from "next/cache";
 
 const Page = async () => {
-    "use cache";
-    cacheLife("hours");
+    // "use cache";
+    // cacheLife("hours");
     const response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/events`
     );
@@ -20,7 +20,7 @@ const Page = async () => {
                 Hackathons, Meetups, and Conferences, All In One Place.
             </p>
             <ExploreBtn />
-            <div className="mt-20 space-y-7">
+            <div className="mt-20 space-y-7" id="events">
                 <h3>Featured Events</h3>
                 <ul className="events">
                     {events &&

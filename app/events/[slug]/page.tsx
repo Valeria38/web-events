@@ -1,9 +1,8 @@
 import BookEvent from "@/components/BookEvent";
-import EventCard from "@/components/EventCard";
-import { IEvent } from "@/db";
-import { getSimilarEventsBySlug } from "@/lib/actions/event.actions";
+import SimilarEvents from "@/components/SimilarEvents";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 const EventDetailItem = ({
     icon,
@@ -85,9 +84,6 @@ const EventDetails = async ({
         tags,
     } = event;
 
-    const similarEvents: IEvent[] = await getSimilarEventsBySlug(slug);
-    console.log("similarEvents", similarEvents);
-
     return (
         <section id="event">
             <div className="header">
@@ -157,27 +153,13 @@ const EventDetails = async ({
                                 Be the first to book your spot!
                             </p>
                         )}
-                        <BookEvent />
+                        <BookEvent eventId={event._id} slug={event.slug} />
                     </div>
                 </aside>
             </div>
-            <div className="flex w-full flex-col gap-4 pt-20">
-                <h2>Similar events</h2>
-                <div className="events">
-                    {similarEvents.length &&
-                        similarEvents.map((event: IEvent) => (
-                            <EventCard
-                                key={event.title}
-                                title={event.title}
-                                image={event.image}
-                                slug={event.slug}
-                                location={event.location}
-                                date={event.date}
-                                time={event.time}
-                            />
-                        ))}
-                </div>
-            </div>
+            <Suspense fallback="Similar events loading...">
+                <SimilarEvents slug={event.slug} />
+            </Suspense>
         </section>
     );
 };

@@ -2,6 +2,8 @@
 
 import { Event } from "@/db";
 import connectDB from "../mongodb";
+import { connection } from "mongoose";
+import { headers } from "next/headers";
 
 export const getSimilarEventsBySlug = async (slug: string) => {
     try {
@@ -11,6 +13,17 @@ export const getSimilarEventsBySlug = async (slug: string) => {
             _id: { $ne: event._id },
             tags: { $in: event.tags },
         }).lean();
+    } catch (error) {
+        return [];
+    }
+};
+
+export const getEvents = async () => {
+    try {
+        await headers();
+        await connectDB();
+        const events = await Event.find().sort({ createdAt: -1 }).lean();
+        return JSON.parse(JSON.stringify(events));
     } catch (error) {
         return [];
     }

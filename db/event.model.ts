@@ -1,3 +1,4 @@
+import { CATEGORIES } from "@/app/constants";
 import { Schema, model, models, Document } from "mongoose";
 
 // TypeScript interface for Event document
@@ -73,7 +74,7 @@ const EventSchema = new Schema<IEvent>(
             type: String,
             required: [true, "Mode is required"],
             enum: {
-                values: ["online", "offline", "hybrid"],
+                values: CATEGORIES,
                 message: "Mode must be either online, offline, or hybrid",
             },
         },
@@ -127,8 +128,6 @@ EventSchema.pre("save", async function () {
     if (event.isModified("time")) {
         event.time = normalizeTime(event.time);
     }
-
-    // next();
 });
 
 // Helper function to generate URL-friendly slug

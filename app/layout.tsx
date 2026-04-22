@@ -3,6 +3,7 @@ import { Schibsted_Grotesk, Martian_Mono } from "next/font/google";
 import "./globals.css";
 import LightRays from "@/components/bg/LightRays";
 import Navbar from "@/components/Navbar";
+import { Toaster } from "react-hot-toast";
 
 const schibstedGrotesk = Schibsted_Grotesk({
     variable: "--font-schibsted-grotesk",
@@ -30,6 +31,7 @@ export default function RootLayout({
             className={`${schibstedGrotesk.variable} ${martianMono.variable} h-full min-h-screen antialiased`}
         >
             <body className="min-h-full flex flex-col relative">
+                <Toaster />
                 <Navbar />
                 <div className="absolute inset-0 z-[-1] min-h-screen">
                     <LightRays

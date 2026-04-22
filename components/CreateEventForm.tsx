@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import { redirect } from "next/navigation";
 import { CATEGORIES } from "@/app/constants";
 import InputError from "./InputError";
+import ImageInput from "./ImageInput";
 
 const initialState: ActionState = {
     message: "",
@@ -35,7 +36,7 @@ const CreateEventForm = () => {
 
             setTimeout(() => {
                 redirect("/events");
-            }, 2000);
+            }, 1000);
         }
     }, [state]);
 
@@ -208,6 +209,7 @@ const CreateEventForm = () => {
                         </div>
 
                         <div className="flex flex-col gap-2">
+                            {/* <ImageInput error={state?.errors?.image?.[0]} /> */}
                             <label
                                 htmlFor="image"
                                 className="text-neutral-400 text-sm"

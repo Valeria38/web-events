@@ -1,7 +1,7 @@
 import { CATEGORIES } from "@/app/constants";
 import * as z from "zod";
 
-const MAX_FILE_SIZE = 4 * 1024 * 1024;
+export const MAX_FILE_SIZE = 4 * 1024 * 1024;
 const ACCEPTED_IMAGE_TYPES = [
     "image/jpeg",
     "image/jpg",
@@ -26,7 +26,7 @@ export const eventSchema = z.object({
     image: z
         .any()
         .refine((file) => file?.size > 0, "Image is required")
-        .refine((file) => file?.size <= MAX_FILE_SIZE, `Maximum size is 4MB`)
+        .refine((file) => file?.size <= MAX_FILE_SIZE, `Maximum size is 4.5MB`)
         .refine(
             (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
             "Only formats .jpg, .jpeg, .png .webp, .avif are allowed"

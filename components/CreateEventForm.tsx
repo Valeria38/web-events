@@ -49,10 +49,14 @@ const CreateEventForm = () => {
 
                     <form action={formAction} className="flex flex-col gap-6">
                         <div className="flex flex-col gap-2">
-                            <label className="text-neutral-400 text-sm">
+                            <label
+                                htmlFor="title"
+                                className="text-neutral-400 text-sm"
+                            >
                                 Event Title
                             </label>
                             <input
+                                id="title"
                                 name="title"
                                 required
                                 defaultValue={
@@ -72,10 +76,14 @@ const CreateEventForm = () => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="flex flex-col gap-2">
-                                <label className="text-neutral-400 text-sm">
+                                <label
+                                    htmlFor="date"
+                                    className="text-neutral-400 text-sm"
+                                >
                                     Date
                                 </label>
                                 <input
+                                    id="date"
                                     required
                                     name="date"
                                     type="date"
@@ -93,10 +101,14 @@ const CreateEventForm = () => {
                                 </InputError>
                             </div>
                             <div className="flex flex-col gap-2">
-                                <label className="text-neutral-400 text-sm">
+                                <label
+                                    htmlFor="location"
+                                    className="text-neutral-400 text-sm"
+                                >
                                     Location
                                 </label>
                                 <input
+                                    id="location"
                                     required
                                     name="location"
                                     placeholder="Venue or Link"
@@ -117,10 +129,14 @@ const CreateEventForm = () => {
                         </div>
 
                         <div className="flex flex-col gap-2">
-                            <label className="text-neutral-400 text-sm">
+                            <label
+                                htmlFor="description"
+                                className="text-neutral-400 text-sm"
+                            >
                                 Description
                             </label>
                             <textarea
+                                id="description"
                                 required
                                 name="description"
                                 placeholder="Short summary..."
@@ -140,10 +156,14 @@ const CreateEventForm = () => {
                         </div>
 
                         <div className="flex flex-col gap-2">
-                            <label className="text-neutral-400 text-sm">
+                            <label
+                                htmlFor="overview"
+                                className="text-neutral-400 text-sm"
+                            >
                                 Full Overview
                             </label>
                             <textarea
+                                id="overview"
                                 required
                                 name="overview"
                                 defaultValue={
@@ -188,10 +208,14 @@ const CreateEventForm = () => {
                         </div>
 
                         <div className="flex flex-col gap-2">
-                            <label className="text-neutral-400 text-sm">
+                            <label
+                                htmlFor="image"
+                                className="text-neutral-400 text-sm"
+                            >
                                 Cover Image
                             </label>
                             <input
+                                id="image"
                                 required
                                 type="file"
                                 name="image"
@@ -203,10 +227,14 @@ const CreateEventForm = () => {
                             </InputError>
                         </div>
                         <div className="flex flex-col gap-2">
-                            <label className="text-neutral-400 text-sm">
+                            <label
+                                htmlFor="venue"
+                                className="text-neutral-400 text-sm"
+                            >
                                 Venue (Location)
                             </label>
                             <input
+                                id="venue"
                                 name="venue"
                                 required
                                 defaultValue={
@@ -224,10 +252,14 @@ const CreateEventForm = () => {
                             </InputError>
                         </div>
                         <div className="flex flex-col gap-2">
-                            <label className="text-neutral-400 text-sm">
+                            <label
+                                htmlFor="time"
+                                className="text-neutral-400 text-sm"
+                            >
                                 Time
                             </label>
                             <input
+                                id="time"
                                 name="time"
                                 required
                                 defaultValue={
@@ -245,10 +277,14 @@ const CreateEventForm = () => {
                             </InputError>
                         </div>
                         <div className="flex flex-col gap-2">
-                            <label className="text-neutral-400 text-sm">
+                            <label
+                                htmlFor="audience"
+                                className="text-neutral-400 text-sm"
+                            >
                                 Audience
                             </label>
                             <input
+                                id="audience"
                                 name="audience"
                                 required
                                 defaultValue={
@@ -266,10 +302,14 @@ const CreateEventForm = () => {
                             </InputError>
                         </div>
                         <div className="flex flex-col gap-2">
-                            <label className="text-neutral-400 text-sm">
+                            <label
+                                htmlFor="mode"
+                                className="text-neutral-400 text-sm"
+                            >
                                 Event Mode
                             </label>
                             <select
+                                id="mode"
                                 name="mode"
                                 className={`bg-neutral-900 border p-3 rounded-xl outline-none focus:border-[#6EE7B7] appearance-none cursor-pointer ${
                                     hasError("mode")

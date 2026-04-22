@@ -28,7 +28,10 @@ export default function AgendaInput({ error }: { error?: string }) {
 
     return (
         <div className="flex flex-col gap-3">
-            <label className="text-neutral-400 text-sm font-medium flex items-center gap-2">
+            <label
+                htmlFor="agenda"
+                className="text-neutral-400 text-sm font-medium flex items-center gap-2"
+            >
                 <CalendarDays size={18} className="text-[#6EE7B7]" />
                 Event Agenda
             </label>
@@ -58,6 +61,7 @@ export default function AgendaInput({ error }: { error?: string }) {
 
             <div className="flex gap-2">
                 <input
+                    id="agenda"
                     type="text"
                     value={currentValue}
                     onChange={(e) => setCurrentValue(e.target.value)}

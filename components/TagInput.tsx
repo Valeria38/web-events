@@ -25,7 +25,7 @@ export default function TagInput({ error }: { error?: string }) {
 
     return (
         <div className="flex flex-col gap-2">
-            <label className="text-neutral-400 text-sm">
+            <label htmlFor="tags" className="text-neutral-400 text-sm">
                 Tags (Press Enter to add)
             </label>
 
@@ -50,6 +50,7 @@ export default function TagInput({ error }: { error?: string }) {
                 ))}
 
                 <input
+                    id="tags"
                     type="text"
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}

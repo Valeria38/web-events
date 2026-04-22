@@ -209,24 +209,7 @@ const CreateEventForm = () => {
                         </div>
 
                         <div className="flex flex-col gap-2">
-                            {/* <ImageInput error={state?.errors?.image?.[0]} /> */}
-                            <label
-                                htmlFor="image"
-                                className="text-neutral-400 text-sm"
-                            >
-                                Cover Image
-                            </label>
-                            <input
-                                id="image"
-                                required
-                                type="file"
-                                name="image"
-                                accept="image/*"
-                                className="text-neutral-400 file:bg-neutral-800 file:text-white file:border-none file:px-4 file:py-2 file:rounded-lg file:mr-4 file:cursor-pointer hover:file:bg-neutral-700"
-                            />
-                            <InputError isHidden={!hasError("image")}>
-                                {state?.errors?.image?.[0]}
-                            </InputError>
+                            <ImageInput error={state?.errors?.image?.[0]} />
                         </div>
                         <div className="flex flex-col gap-2">
                             <label

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, KeyboardEvent } from "react";
+import { useState, KeyboardEvent, FocusEvent } from "react";
 import { X } from "lucide-react";
 import InputError from "./InputError";
 
@@ -9,15 +9,24 @@ export default function TagInput({ error }: { error?: string }) {
     const [inputValue, setInputValue] = useState("");
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter" && inputValue.trim()) {
+        const value = inputValue.trim();
+        if (e.key === "Enter" && value) {
             e.preventDefault();
-            if (!tags.includes(inputValue.trim())) {
-                setTags([...tags, inputValue.trim()]);
+            if (!tags.includes(value)) {
+                setTags([...tags, value]);
             }
             setInputValue("");
         }
     };
-    console.log("err", !!error);
+    const handleBlur = (e: FocusEvent) => {
+        const value = inputValue.trim();
+
+        e.preventDefault();
+        if (!tags.includes(value)) {
+            setTags([...tags, value]);
+        }
+        setInputValue("");
+    };
 
     const removeTag = (tagToRemove: string) => {
         setTags(tags.filter((tag) => tag !== tagToRemove));
@@ -26,7 +35,7 @@ export default function TagInput({ error }: { error?: string }) {
     return (
         <div className="flex flex-col gap-2">
             <label htmlFor="tags" className="text-neutral-400 text-sm">
-                Tags (Press Enter to add)
+                Tags (Press Enter or blur(for mobile devices) to add)
             </label>
 
             <div
@@ -54,6 +63,7 @@ export default function TagInput({ error }: { error?: string }) {
                     type="text"
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
+                    onBlur={handleBlur}
                     onKeyDown={handleKeyDown}
                     placeholder={
                         tags.length === 0 ? "e.g. React, Web3, Design" : ""

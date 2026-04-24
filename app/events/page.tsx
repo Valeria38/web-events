@@ -1,5 +1,5 @@
 import EventCard from "@/components/EventCard";
-import { getEvents } from "@/lib/actions/event.actions";
+import { getEvents } from "@/lib/queries/events";
 import { IEvent } from "@/db";
 
 const EventsPage = async () => {

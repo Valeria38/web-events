@@ -1,4 +1,4 @@
-import { getSimilarEventsBySlug } from "@/lib/actions/event.actions";
+import { getSimilarEventsBySlug } from "@/lib/queries/events";
 import EventCard from "./EventCard";
 import { IEvent } from "@/db";
 

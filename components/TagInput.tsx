@@ -22,7 +22,7 @@ export default function TagInput({ error }: { error?: string }) {
         const value = inputValue.trim();
 
         e.preventDefault();
-        if (!tags.includes(value)) {
+        if (value && !tags.includes(value)) {
             setTags([...tags, value]);
         }
         setInputValue("");

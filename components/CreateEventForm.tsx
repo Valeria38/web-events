@@ -7,9 +7,9 @@ import {
 import SubmitButton from "./SubmitButton";
 import TagInput from "./TagInput";
 import AgendaInput from "./AgendaInput";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { CATEGORIES } from "@/app/constants";
 import InputError from "./InputError";
 import ImageInput from "./ImageInput";
@@ -20,308 +20,319 @@ const initialState: ActionState = {
     status: "idle" as ActionStateStatus,
     errors: {},
     inputs: {},
+    timestamp: 0,
 };
 
 const CreateEventForm = () => {
-    const [state, formAction] = useActionState(createEvent, initialState);
+    const lastProcessedTimestamp = useRef<number | null>(null);
 
+    const [formKey, setFormKey] = useState(0);
+    const [state, formAction] = useActionState(createEvent, initialState);
+    const { push } = useRouter();
     const hasError = (fieldName: keyof typeof state.errors) =>
         !!state?.errors?.[fieldName];
 
     useEffect(() => {
-        if (state?.status === "success") {
+        let timeoutId: ReturnType<typeof setTimeout> | undefined;
+        if (
+            state?.status === "success" &&
+            state.timestamp !== lastProcessedTimestamp.current
+        ) {
+            lastProcessedTimestamp.current = state.timestamp;
+            toast.dismiss();
             toast.success(
                 "Event has been successfully created! Redirecting..."
             );
 
-            setTimeout(() => {
-                redirect("/events");
+            timeoutId = setTimeout(() => {
+                push("/events");
+                setFormKey((prev) => prev + 1);
             }, 1000);
         }
-    }, [state]);
+        return () => clearTimeout(timeoutId);
+    }, [state?.timestamp, state?.status, push]);
 
     return (
-        <>
-            <section>
-                <div className="max-w-3xl mx-auto bg-[#0a0a0a] border border-neutral-800 rounded-2xl p-8 shadow-2xl">
-                    <h2 className="text-3xl font-bold text-white mb-8">
-                        Create <span className="text-[#6EE7B7]">Event</span>
-                    </h2>
+        <section>
+            <div className="max-w-3xl mx-auto bg-[#0a0a0a] border border-neutral-800 rounded-2xl p-8 shadow-2xl">
+                <h2 className="text-3xl font-bold text-white mb-8">
+                    Create <span className="text-[#6EE7B7]">Event</span>
+                </h2>
 
-                    <form action={formAction} className="flex flex-col gap-6">
+                <form
+                    key={formKey}
+                    action={formAction}
+                    className="flex flex-col gap-6"
+                >
+                    <div className="flex flex-col gap-2">
+                        <label
+                            htmlFor="title"
+                            className="text-neutral-400 text-sm"
+                        >
+                            Event Title
+                        </label>
+                        <input
+                            id="title"
+                            name="title"
+                            required
+                            defaultValue={
+                                (state?.inputs?.title as string) || ""
+                            }
+                            placeholder="Enter title"
+                            className={`${
+                                hasError("title")
+                                    ? "border-red-700 "
+                                    : "border-neutral-700"
+                            } bg-neutral-900 border border-neutral-700 p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] transition`}
+                        />
+                        <InputError isHidden={!hasError("title")}>
+                            {state?.errors?.title?.[0]}
+                        </InputError>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="flex flex-col gap-2">
                             <label
-                                htmlFor="title"
+                                htmlFor="date"
                                 className="text-neutral-400 text-sm"
                             >
-                                Event Title
+                                Date
                             </label>
                             <input
-                                id="title"
-                                name="title"
+                                id="date"
                                 required
+                                name="date"
+                                type="date"
                                 defaultValue={
-                                    (state?.inputs?.title as string) || ""
+                                    (state?.inputs?.date as string) || ""
                                 }
-                                placeholder="Enter title"
                                 className={`${
-                                    hasError("title")
+                                    hasError("date")
                                         ? "border-red-700 "
                                         : "border-neutral-700"
-                                } bg-neutral-900 border border-neutral-700 p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] transition`}
+                                }bg-neutral-900 border border-neutral-700 p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] [color-scheme:dark]`}
                             />
-                            <InputError isHidden={!hasError("title")}>
-                                {state?.errors?.title?.[0]}
-                            </InputError>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="flex flex-col gap-2">
-                                <label
-                                    htmlFor="date"
-                                    className="text-neutral-400 text-sm"
-                                >
-                                    Date
-                                </label>
-                                <input
-                                    id="date"
-                                    required
-                                    name="date"
-                                    type="date"
-                                    defaultValue={
-                                        (state?.inputs?.date as string) || ""
-                                    }
-                                    className={`${
-                                        hasError("date")
-                                            ? "border-red-700 "
-                                            : "border-neutral-700"
-                                    }bg-neutral-900 border border-neutral-700 p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] [color-scheme:dark]`}
-                                />
-                                <InputError isHidden={!hasError("date")}>
-                                    {state?.errors?.date?.[0]}
-                                </InputError>
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <label
-                                    htmlFor="location"
-                                    className="text-neutral-400 text-sm"
-                                >
-                                    Location
-                                </label>
-                                <input
-                                    id="location"
-                                    required
-                                    name="location"
-                                    placeholder="Venue or Link"
-                                    defaultValue={
-                                        (state?.inputs?.location as string) ||
-                                        ""
-                                    }
-                                    className={`bg-neutral-900 border ${
-                                        hasError("location")
-                                            ? "border-red-700 "
-                                            : "border-neutral-700"
-                                    } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7]`}
-                                />
-                                <InputError isHidden={!hasError("location")}>
-                                    {state?.errors?.location?.[0]}
-                                </InputError>
-                            </div>
-                        </div>
-
-                        <div className="flex flex-col gap-2">
-                            <label
-                                htmlFor="description"
-                                className="text-neutral-400 text-sm"
-                            >
-                                Description
-                            </label>
-                            <textarea
-                                id="description"
-                                required
-                                name="description"
-                                placeholder="Short summary..."
-                                defaultValue={
-                                    (state?.inputs?.description as string) || ""
-                                }
-                                rows={3}
-                                className={`bg-neutral-900 border ${
-                                    hasError("description")
-                                        ? "border-red-700 "
-                                        : "border-neutral-700"
-                                } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] resize-none`}
-                            />
-                            <InputError isHidden={!hasError("description")}>
-                                {state?.errors?.description?.[0]}
-                            </InputError>
-                        </div>
-
-                        <div className="flex flex-col gap-2">
-                            <label
-                                htmlFor="overview"
-                                className="text-neutral-400 text-sm"
-                            >
-                                Full Overview
-                            </label>
-                            <textarea
-                                id="overview"
-                                required
-                                name="overview"
-                                defaultValue={
-                                    (state?.inputs?.overview as string) || ""
-                                }
-                                placeholder="Detailed information..."
-                                rows={5}
-                                className={`bg-neutral-900 border ${
-                                    hasError("overview")
-                                        ? "border-red-700 "
-                                        : "border-neutral-700"
-                                } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] resize-none`}
-                            />
-                            <InputError isHidden={!hasError("overview")}>
-                                {state?.errors?.overview?.[0]}
+                            <InputError isHidden={!hasError("date")}>
+                                {state?.errors?.date?.[0]}
                             </InputError>
                         </div>
                         <div className="flex flex-col gap-2">
                             <label
+                                htmlFor="location"
                                 className="text-neutral-400 text-sm"
-                                htmlFor="organizer"
                             >
-                                Organizer
+                                Location
                             </label>
                             <input
-                                id="organizer"
-                                name="organizer"
+                                id="location"
                                 required
+                                name="location"
+                                placeholder="Venue or Link"
                                 defaultValue={
-                                    (state?.inputs?.organizer as string) || ""
+                                    (state?.inputs?.location as string) || ""
                                 }
-                                placeholder="e.g. Google Cloud organizes events..."
                                 className={`bg-neutral-900 border ${
-                                    hasError("organizer")
+                                    hasError("location")
                                         ? "border-red-700 "
                                         : "border-neutral-700"
                                 } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7]`}
                             />
-                            <InputError isHidden={!hasError("organizer")}>
-                                {state?.errors?.organizer?.[0]}
+                            <InputError isHidden={!hasError("location")}>
+                                {state?.errors?.location?.[0]}
                             </InputError>
                         </div>
+                    </div>
 
-                        <div className="flex flex-col gap-2">
-                            <ImageInput error={state?.errors?.image?.[0]} />
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label
-                                htmlFor="venue"
-                                className="text-neutral-400 text-sm"
-                            >
-                                Venue (Location)
-                            </label>
-                            <input
-                                id="venue"
-                                name="venue"
-                                required
-                                defaultValue={
-                                    (state?.inputs?.venue as string) || ""
-                                }
-                                placeholder="e.g. Moscone Center"
-                                className={`bg-neutral-900 border ${
-                                    hasError("venue")
-                                        ? "border-red-700 "
-                                        : "border-neutral-700"
-                                } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] transition`}
-                            />
-                            <InputError isHidden={!hasError("venue")}>
-                                {state?.errors?.venue?.[0]}
-                            </InputError>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label
-                                htmlFor="time"
-                                className="text-neutral-400 text-sm"
-                            >
-                                Time
-                            </label>
-                            <input
-                                id="time"
-                                name="time"
-                                required
-                                defaultValue={
-                                    (state?.inputs?.time as string) || ""
-                                }
-                                placeholder="8:00"
-                                className={`bg-neutral-900 border ${
-                                    hasError("time")
-                                        ? "border-red-700 "
-                                        : "border-neutral-700"
-                                } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] transition`}
-                            />
-                            <InputError isHidden={!hasError("time")}>
-                                {state?.errors?.time?.[0]}
-                            </InputError>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label
-                                htmlFor="audience"
-                                className="text-neutral-400 text-sm"
-                            >
-                                Audience
-                            </label>
-                            <input
-                                id="audience"
-                                name="audience"
-                                required
-                                defaultValue={
-                                    (state?.inputs?.audience as string) || ""
-                                }
-                                placeholder="Cloud engineers, DevOps"
-                                className={`bg-neutral-900 border ${
-                                    hasError("audience")
-                                        ? "border-red-700 "
-                                        : "border-neutral-700"
-                                } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] transition`}
-                            />
-                            <InputError isHidden={!hasError("audience")}>
-                                {state?.errors?.audience?.[0]}
-                            </InputError>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <label
-                                htmlFor="mode"
-                                className="text-neutral-400 text-sm"
-                            >
-                                Event Mode
-                            </label>
-                            <select
-                                id="mode"
-                                name="mode"
-                                className={`bg-neutral-900 border p-3 rounded-xl outline-none focus:border-[#6EE7B7] appearance-none cursor-pointer ${
-                                    hasError("mode")
-                                        ? "border-red-700 "
-                                        : "border-neutral-700"
-                                }`}
-                            >
-                                {CATEGORIES.map((category) => (
-                                    <option key={category} value={category}>
-                                        {category.slice(0, 1).toUpperCase() +
-                                            category.slice(1)}
-                                    </option>
-                                ))}
-                            </select>
-                            <InputError isHidden={!hasError("mode")}>
-                                {state?.errors?.mode?.[0]}
-                            </InputError>
-                        </div>
+                    <div className="flex flex-col gap-2">
+                        <label
+                            htmlFor="description"
+                            className="text-neutral-400 text-sm"
+                        >
+                            Description
+                        </label>
+                        <textarea
+                            id="description"
+                            required
+                            name="description"
+                            placeholder="Short summary..."
+                            defaultValue={
+                                (state?.inputs?.description as string) || ""
+                            }
+                            rows={3}
+                            className={`bg-neutral-900 border ${
+                                hasError("description")
+                                    ? "border-red-700 "
+                                    : "border-neutral-700"
+                            } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] resize-none`}
+                        />
+                        <InputError isHidden={!hasError("description")}>
+                            {state?.errors?.description?.[0]}
+                        </InputError>
+                    </div>
 
-                        <TagInput error={state?.errors?.tags?.[0]} />
-                        <AgendaInput error={state?.errors?.agenda?.[0]} />
+                    <div className="flex flex-col gap-2">
+                        <label
+                            htmlFor="overview"
+                            className="text-neutral-400 text-sm"
+                        >
+                            Full Overview
+                        </label>
+                        <textarea
+                            id="overview"
+                            required
+                            name="overview"
+                            defaultValue={
+                                (state?.inputs?.overview as string) || ""
+                            }
+                            placeholder="Detailed information..."
+                            rows={5}
+                            className={`bg-neutral-900 border ${
+                                hasError("overview")
+                                    ? "border-red-700 "
+                                    : "border-neutral-700"
+                            } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] resize-none`}
+                        />
+                        <InputError isHidden={!hasError("overview")}>
+                            {state?.errors?.overview?.[0]}
+                        </InputError>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <label
+                            className="text-neutral-400 text-sm"
+                            htmlFor="organizer"
+                        >
+                            Organizer
+                        </label>
+                        <input
+                            id="organizer"
+                            name="organizer"
+                            required
+                            defaultValue={
+                                (state?.inputs?.organizer as string) || ""
+                            }
+                            placeholder="e.g. Google Cloud organizes events..."
+                            className={`bg-neutral-900 border ${
+                                hasError("organizer")
+                                    ? "border-red-700 "
+                                    : "border-neutral-700"
+                            } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7]`}
+                        />
+                        <InputError isHidden={!hasError("organizer")}>
+                            {state?.errors?.organizer?.[0]}
+                        </InputError>
+                    </div>
 
-                        <SubmitButton />
-                    </form>
-                </div>
-            </section>
-        </>
+                    <div className="flex flex-col gap-2">
+                        <ImageInput error={state?.errors?.image?.[0]} />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <label
+                            htmlFor="venue"
+                            className="text-neutral-400 text-sm"
+                        >
+                            Venue (Location)
+                        </label>
+                        <input
+                            id="venue"
+                            name="venue"
+                            required
+                            defaultValue={
+                                (state?.inputs?.venue as string) || ""
+                            }
+                            placeholder="e.g. Moscone Center"
+                            className={`bg-neutral-900 border ${
+                                hasError("venue")
+                                    ? "border-red-700 "
+                                    : "border-neutral-700"
+                            } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] transition`}
+                        />
+                        <InputError isHidden={!hasError("venue")}>
+                            {state?.errors?.venue?.[0]}
+                        </InputError>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <label
+                            htmlFor="time"
+                            className="text-neutral-400 text-sm"
+                        >
+                            Time
+                        </label>
+                        <input
+                            id="time"
+                            name="time"
+                            required
+                            defaultValue={(state?.inputs?.time as string) || ""}
+                            placeholder="8:00"
+                            className={`bg-neutral-900 border ${
+                                hasError("time")
+                                    ? "border-red-700 "
+                                    : "border-neutral-700"
+                            } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] transition`}
+                        />
+                        <InputError isHidden={!hasError("time")}>
+                            {state?.errors?.time?.[0]}
+                        </InputError>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <label
+                            htmlFor="audience"
+                            className="text-neutral-400 text-sm"
+                        >
+                            Audience
+                        </label>
+                        <input
+                            id="audience"
+                            name="audience"
+                            required
+                            defaultValue={
+                                (state?.inputs?.audience as string) || ""
+                            }
+                            placeholder="Cloud engineers, DevOps"
+                            className={`bg-neutral-900 border ${
+                                hasError("audience")
+                                    ? "border-red-700 "
+                                    : "border-neutral-700"
+                            } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] transition`}
+                        />
+                        <InputError isHidden={!hasError("audience")}>
+                            {state?.errors?.audience?.[0]}
+                        </InputError>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <label
+                            htmlFor="mode"
+                            className="text-neutral-400 text-sm"
+                        >
+                            Event Mode
+                        </label>
+                        <select
+                            id="mode"
+                            name="mode"
+                            className={`bg-neutral-900 border p-3 rounded-xl outline-none focus:border-[#6EE7B7] appearance-none cursor-pointer ${
+                                hasError("mode")
+                                    ? "border-red-700 "
+                                    : "border-neutral-700"
+                            }`}
+                        >
+                            {CATEGORIES.map((category) => (
+                                <option key={category} value={category}>
+                                    {category.slice(0, 1).toUpperCase() +
+                                        category.slice(1)}
+                                </option>
+                            ))}
+                        </select>
+                        <InputError isHidden={!hasError("mode")}>
+                            {state?.errors?.mode?.[0]}
+                        </InputError>
+                    </div>
+
+                    <TagInput error={state?.errors?.tags?.[0]} />
+                    <AgendaInput error={state?.errors?.agenda?.[0]} />
+
+                    <SubmitButton />
+                </form>
+            </div>
+        </section>
     );
 };
 

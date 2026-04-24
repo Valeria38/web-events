@@ -39,6 +39,7 @@ export interface ActionState {
     status: ActionStateStatus;
     errors: Record<string, string[]>;
     inputs: Record<string, string | File>;
+    timestamp: number | null;
 }
 
 export async function createEvent(state: ActionState, formData: FormData) {
@@ -81,6 +82,7 @@ export async function createEvent(state: ActionState, formData: FormData) {
                 validatedFields.error.issues[0]?.message || "Validation error",
             status: "error",
             inputs: rawData,
+            timestamp: null,
         } as ActionState;
     }
     try {
@@ -120,6 +122,7 @@ export async function createEvent(state: ActionState, formData: FormData) {
             status: "success",
             errors: {},
             inputs: {},
+            timestamp: Date.now(),
         } as ActionState;
     } catch (error: unknown) {
         console.error("Event creation:", error);

@@ -1,5 +1,6 @@
 import BookEvent from "@/components/BookEvent";
 import SimilarEvents from "@/components/SimilarEvents";
+import { getEventDetails } from "@/lib/queries/events";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -45,28 +46,10 @@ const EventDetails = async ({
     params: Promise<{ slug: string }>;
 }) => {
     const bookings = 11;
-    let event;
     const { slug } = await params;
-    try {
-        const response = await fetch(
-            `${process.env.NEXT_PUBLIC_BASE_URL}/api/events/${slug}`,
-            {
-                next: { revalidate: 60 },
-            }
-        );
-        if (!response.ok) {
-            if (response.status === 404) {
-                return notFound();
-            }
-            throw new Error(`Failed to fetch event: ${response.statusText}`);
-        }
-        const res = await response.json();
-        event = res.event;
-        if (!event) {
-            return notFound();
-        }
-    } catch (error) {
-        console.error("Error fetching event", error);
+    const event = await getEventDetails(slug);
+
+    if (!event) {
         return notFound();
     }
 

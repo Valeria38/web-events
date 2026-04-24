@@ -90,6 +90,7 @@ export async function createEvent(state: ActionState, formData: FormData) {
         });
 
         revalidatePath("/events");
+        revalidatePath("/");
         return {
             success: true,
             message: "Event successfully created",

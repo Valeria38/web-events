@@ -4,6 +4,7 @@ import connectDB from "../mongodb";
 import { revalidatePath } from "next/cache";
 import { v2 as cloudinary } from "cloudinary";
 import { eventSchema } from "../validators";
+import { Event } from "@/db";
 
 export type ActionStateStatus = "success" | "error" | "idle";
 

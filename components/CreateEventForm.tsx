@@ -104,6 +104,7 @@ const CreateEventForm = () => {
                             >
                                 Date
                             </label>
+
                             <input
                                 id="date"
                                 required
@@ -116,8 +117,9 @@ const CreateEventForm = () => {
                                     hasError("date")
                                         ? "border-red-700 "
                                         : "border-neutral-700"
-                                }w-full bg-neutral-900 border border-neutral-700 p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] [color-scheme:dark]`}
+                                } w-full bg-neutral-900 border border-neutral-700 p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] custom-date-input`}
                             />
+
                             <InputError isHidden={!hasError("date")}>
                                 {state?.errors?.date?.[0]}
                             </InputError>

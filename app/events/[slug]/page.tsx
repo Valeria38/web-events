@@ -1,9 +1,17 @@
 import BookEvent from "@/components/BookEvent";
 import SimilarEvents from "@/components/SimilarEvents";
-import { getEventDetails } from "@/lib/queries/events";
+import { IEvent } from "@/db";
+import { getEventDetails, getEvents } from "@/lib/queries/events";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+
+export async function generateStaticParams() {
+    const events = await getEvents();
+    return events.map(({ slug }: IEvent) => ({
+        slug: slug.toString(),
+    }));
+}
 
 const EventDetailItem = ({
     icon,

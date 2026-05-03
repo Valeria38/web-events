@@ -5,6 +5,7 @@ import { getEvents } from "@/lib/queries/events";
 
 const Page = async () => {
     const events = await getEvents();
+    console.log("ev", events);
 
     return (
         <section>
@@ -20,9 +21,9 @@ const Page = async () => {
                 <ul className="events">
                     {events &&
                         events.length > 0 &&
-                        events.map((ev: IEvent) => (
+                        events.map((ev: IEvent, idx: number) => (
                             <li className="list-none" key={ev.title}>
-                                <EventCard {...ev} />
+                                <EventCard {...ev} idx={idx} />
                             </li>
                         ))}
                 </ul>

@@ -34,12 +34,7 @@ const CreateEventForm = () => {
 
     useEffect(() => {
         let timeoutId: ReturnType<typeof setTimeout> | undefined;
-        console.log(
-            "&&&&&&&",
-            state?.status, //error
-            state?.timestamp, //undefined
-            lastProcessedTimestamp.current //null
-        );
+
         if (
             state?.status === "success" &&
             state.timestamp !== lastProcessedTimestamp.current

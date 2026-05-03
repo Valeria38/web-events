@@ -10,9 +10,18 @@ interface Props {
     location: string;
     date: string;
     time: string;
+    idx: number;
 }
 
-const EventCard = ({ title, image, slug, location, date, time }: Props) => {
+const EventCard = ({
+    title,
+    image,
+    slug,
+    location,
+    date,
+    time,
+    idx,
+}: Props) => {
     return (
         <Link href={`/events/${slug}`} id="event-card">
             <div>
@@ -22,6 +31,8 @@ const EventCard = ({ title, image, slug, location, date, time }: Props) => {
                     width={410}
                     height={300}
                     className="poster"
+                    priority={idx <= 3}
+                    sizes="(max-width: 639px) 100vw, (max-width: 767px) 50vw, 33.3vw"
                 />
                 <div className="flex flex-row gap-2">
                     <Image

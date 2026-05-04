@@ -5,7 +5,6 @@ import { getEvents } from "@/lib/queries/events";
 
 const Page = async () => {
     const events = await getEvents();
-    console.log("ev", events);
 
     return (
         <section>

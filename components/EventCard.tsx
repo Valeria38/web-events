@@ -1,4 +1,4 @@
-"use client";
+
 
 import Image from "next/image";
 import Link from "next/link";
@@ -40,6 +40,7 @@ const EventCard = ({
                         alt="location"
                         width={14}
                         height={14}
+                        className="h-auto w-auto"
                     />
                     <p>{location}</p>
                     <div className="datetime">
@@ -49,6 +50,7 @@ const EventCard = ({
                                 alt="location"
                                 width={14}
                                 height={14}
+                                className="h-auto w-auto"
                             />
                             <p>{date}</p>
                         </div>
@@ -58,6 +60,7 @@ const EventCard = ({
                                 alt="location"
                                 width={14}
                                 height={14}
+                                className="h-auto w-auto"
                             />
                             <p>{time}</p>
                         </div>

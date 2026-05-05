@@ -11,7 +11,6 @@ const Navbar = () => {
                         alt="Logo"
                         width={24}
                         height={24}
-                        className="h-auto w-auto"
                     />
                     <p>DevEvent</p>
                 </Link>

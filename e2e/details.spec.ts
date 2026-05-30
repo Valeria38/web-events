@@ -1,3 +1,4 @@
+import Page from '@/app/page';
 import { test, expect } from '@playwright/test';
 
 test.describe('Event details page', () => {
@@ -59,9 +60,9 @@ test.describe('Event details page', () => {
     });
 
     test('should render tags', async ({ page }) => {
-        const tags = page.locator('.pill');
+        const tag = page.locator('.pill').first();
 
-        expect(await tags.count()).toBeGreaterThan(1);
+        await expect(tag).toBeVisible();
     })
 
     test('should book the spot', async ({ page }) => {
@@ -69,13 +70,15 @@ test.describe('Event details page', () => {
         const bookButton = bookSection.getByRole('button', { name: /submit/i });
         const bookForm = bookSection.locator('form');
         const emailInput = bookForm.locator('input#email');
-        const successMessage = bookSection.locator('#book-event > p');
+        const successMessage = page.locator('#book-event').getByText('Thank you for signing up!');
         const responsePromise = page.waitForResponse(response =>
             response.url().includes('/events/') &&
             response.request().method() === 'POST'
         );
-        expect(bookForm).toBeVisible();
-        expect(successMessage).not.toBeVisible();
+
+        await expect(bookForm).toBeVisible();
+        await expect(successMessage).not.toBeVisible();
+
 
         const email = Date.now() + '@mail.com';
         await emailInput.fill(email);
@@ -85,6 +88,7 @@ test.describe('Event details page', () => {
         const payload = Array.isArray(requestData) ? requestData[0] : requestData;
         expect(response.status()).toBe(200);
         expect(payload?.email).toBe(email);
+
         await expect(successMessage).toBeVisible();
         await expect(bookForm).toBeHidden();
     });

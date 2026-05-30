@@ -1,24 +1,42 @@
 name: Playwright Tests
+
 on:
   push:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      MONGODB_URI: ${{ secrets.MONGODB_URI }}
     steps:
     - uses: actions/checkout@v4
+    
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
+        
     - name: Install dependencies
       run: npm install -g yarn && yarn
+      
     - name: Install Playwright Browsers
       run: yarn playwright install --with-deps
-    - name: Run Playwright tests
-      run: yarn playwright test
+     
+    - name: Run CI Scripts, Build and Test
+      
+      run: |
+        npx ts-node scripts/seed-ci.ts
+        yarn build
+        yarn playwright test
+
+    - name: Cleanup CI Database
+      if: always()
+      run: |
+        npx ts-node scripts/clear-ci.ts  
+        
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:

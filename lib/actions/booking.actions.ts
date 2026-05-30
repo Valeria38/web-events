@@ -17,6 +17,13 @@ export async function createBooking({
         return { success: true, booking: JSON.parse(JSON.stringify(booking)) };
     } catch (error) {
         console.error("Create booking failed", error);
+        if (process.env.CI) {
+            console.log("======================================");
+            console.log("CRITICAL MONGODB ERROR IN CI:");
+            console.log(error instanceof Error ? error.stack : error);
+            console.log("======================================");
+            process.exit(1);
+        }
         return { success: false, error };
     }
 }

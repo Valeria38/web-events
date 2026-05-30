@@ -17,10 +17,12 @@ const EventDetailItem = ({
     icon,
     alt,
     label,
+    testId,
 }: {
     icon: string;
     alt: string;
     label: string;
+    testId?: string;
 }) => (
     <div className="flex flex-row gap-2 items-center">
         <Image
@@ -30,7 +32,7 @@ const EventDetailItem = ({
             height={17}
             className="h-auto w-auto"
         />
-        <p>{label}</p>
+        <p data-testid={testId}>{label}</p>
     </div>
 );
 
@@ -117,6 +119,7 @@ const EventDetails = async ({
                             icon={"/icons/pin.svg"}
                             alt="clock"
                             label={location}
+                            testId="location"
                         />
                         <EventDetailItem
                             icon={"/icons/mode.svg"}

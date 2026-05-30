@@ -28,6 +28,7 @@ const CreateEventForm = () => {
 
     const [formKey, setFormKey] = useState(0);
     const [state, formAction] = useActionState(createEvent, initialState);
+
     const { push } = useRouter();
     const hasError = (fieldName: keyof typeof state.errors) =>
         !!state?.errors?.[fieldName];
@@ -80,11 +81,10 @@ const CreateEventForm = () => {
                                 (state?.inputs?.title as string) || ""
                             }
                             placeholder="Enter title"
-                            className={`${
-                                hasError("title")
-                                    ? "border-red-700 "
-                                    : "border-neutral-700"
-                            } bg-neutral-900 border border-neutral-700 p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] transition`}
+                            className={`${hasError("title")
+                                ? "border-red-700 "
+                                : "border-neutral-700"
+                                } bg-neutral-900 border border-neutral-700 p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] transition`}
                         />
                         <InputError isHidden={!hasError("title")}>
                             {state?.errors?.title?.[0]}
@@ -108,11 +108,10 @@ const CreateEventForm = () => {
                                 defaultValue={
                                     (state?.inputs?.date as string) || ""
                                 }
-                                className={`${
-                                    hasError("date")
-                                        ? "border-red-700 "
-                                        : "border-neutral-700"
-                                } w-full bg-neutral-900 border border-neutral-700 p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] custom-date-input`}
+                                className={`${hasError("date")
+                                    ? "border-red-700 "
+                                    : "border-neutral-700"
+                                    } w-full bg-neutral-900 border border-neutral-700 p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] custom-date-input`}
                             />
 
                             <InputError isHidden={!hasError("date")}>
@@ -134,11 +133,10 @@ const CreateEventForm = () => {
                                 defaultValue={
                                     (state?.inputs?.location as string) || ""
                                 }
-                                className={`bg-neutral-900 border ${
-                                    hasError("location")
-                                        ? "border-red-700 "
-                                        : "border-neutral-700"
-                                } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7]`}
+                                className={`bg-neutral-900 border ${hasError("location")
+                                    ? "border-red-700 "
+                                    : "border-neutral-700"
+                                    } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7]`}
                             />
                             <InputError isHidden={!hasError("location")}>
                                 {state?.errors?.location?.[0]}
@@ -162,11 +160,10 @@ const CreateEventForm = () => {
                                 (state?.inputs?.description as string) || ""
                             }
                             rows={3}
-                            className={`bg-neutral-900 border ${
-                                hasError("description")
-                                    ? "border-red-700 "
-                                    : "border-neutral-700"
-                            } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] resize-none`}
+                            className={`bg-neutral-900 border ${hasError("description")
+                                ? "border-red-700 "
+                                : "border-neutral-700"
+                                } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] resize-none`}
                         />
                         <InputError isHidden={!hasError("description")}>
                             {state?.errors?.description?.[0]}
@@ -189,11 +186,10 @@ const CreateEventForm = () => {
                             }
                             placeholder="Detailed information..."
                             rows={5}
-                            className={`bg-neutral-900 border ${
-                                hasError("overview")
-                                    ? "border-red-700 "
-                                    : "border-neutral-700"
-                            } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] resize-none`}
+                            className={`bg-neutral-900 border ${hasError("overview")
+                                ? "border-red-700 "
+                                : "border-neutral-700"
+                                } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] resize-none`}
                         />
                         <InputError isHidden={!hasError("overview")}>
                             {state?.errors?.overview?.[0]}
@@ -214,11 +210,10 @@ const CreateEventForm = () => {
                                 (state?.inputs?.organizer as string) || ""
                             }
                             placeholder="e.g. Google Cloud organizes events..."
-                            className={`bg-neutral-900 border ${
-                                hasError("organizer")
-                                    ? "border-red-700 "
-                                    : "border-neutral-700"
-                            } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7]`}
+                            className={`bg-neutral-900 border ${hasError("organizer")
+                                ? "border-red-700 "
+                                : "border-neutral-700"
+                                } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7]`}
                         />
                         <InputError isHidden={!hasError("organizer")}>
                             {state?.errors?.organizer?.[0]}
@@ -243,11 +238,10 @@ const CreateEventForm = () => {
                                 (state?.inputs?.venue as string) || ""
                             }
                             placeholder="e.g. Moscone Center"
-                            className={`bg-neutral-900 border ${
-                                hasError("venue")
-                                    ? "border-red-700 "
-                                    : "border-neutral-700"
-                            } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] transition`}
+                            className={`bg-neutral-900 border ${hasError("venue")
+                                ? "border-red-700 "
+                                : "border-neutral-700"
+                                } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] transition`}
                         />
                         <InputError isHidden={!hasError("venue")}>
                             {state?.errors?.venue?.[0]}
@@ -266,11 +260,10 @@ const CreateEventForm = () => {
                             required
                             defaultValue={(state?.inputs?.time as string) || ""}
                             placeholder="8:00"
-                            className={`bg-neutral-900 border ${
-                                hasError("time")
-                                    ? "border-red-700 "
-                                    : "border-neutral-700"
-                            } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] transition`}
+                            className={`bg-neutral-900 border ${hasError("time")
+                                ? "border-red-700 "
+                                : "border-neutral-700"
+                                } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] transition`}
                         />
                         <InputError isHidden={!hasError("time")}>
                             {state?.errors?.time?.[0]}
@@ -291,11 +284,10 @@ const CreateEventForm = () => {
                                 (state?.inputs?.audience as string) || ""
                             }
                             placeholder="Cloud engineers, DevOps"
-                            className={`bg-neutral-900 border ${
-                                hasError("audience")
-                                    ? "border-red-700 "
-                                    : "border-neutral-700"
-                            } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] transition`}
+                            className={`bg-neutral-900 border ${hasError("audience")
+                                ? "border-red-700 "
+                                : "border-neutral-700"
+                                } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] transition`}
                         />
                         <InputError isHidden={!hasError("audience")}>
                             {state?.errors?.audience?.[0]}
@@ -311,11 +303,10 @@ const CreateEventForm = () => {
                         <select
                             id="mode"
                             name="mode"
-                            className={`bg-neutral-900 border p-3 rounded-xl outline-none focus:border-[#6EE7B7] appearance-none cursor-pointer ${
-                                hasError("mode")
-                                    ? "border-red-700 "
-                                    : "border-neutral-700"
-                            }`}
+                            className={`bg-neutral-900 border p-3 rounded-xl outline-none focus:border-[#6EE7B7] appearance-none cursor-pointer ${hasError("mode")
+                                ? "border-red-700 "
+                                : "border-neutral-700"
+                                }`}
                         >
                             {CATEGORIES.map((category) => (
                                 <option key={category} value={category}>

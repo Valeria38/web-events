@@ -7,7 +7,11 @@ async function seed() {
         process.exit(1);
     }
 
-    await mongoose.connect(uri);
+    await mongoose.connect(uri, {
+        bufferCommands: false,
+        serverSelectionTimeoutMS: 5000,
+        connectTimeoutMS: 5000,
+    })
 
     await mongoose.connection.collection('events').insertOne({
         title: 'CI Build Test Event',

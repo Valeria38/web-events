@@ -33,7 +33,7 @@ test.describe('Home page', () => {
   });
 
   test('should navigate to the event details page when an event card is clicked', async ({ page }) => {
-    const eventCard = page.locator('#event-card').first();
+    const eventCard = page.locator('.event-card').first();
     const href = await eventCard.getAttribute('href');
     await eventCard.click();
     await expect(page).toHaveURL(new RegExp(`${href}`));

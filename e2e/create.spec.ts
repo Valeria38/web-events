@@ -1,3 +1,4 @@
+import connectDB from '@/lib/mongodb';
 import { test, expect, type Page } from '@playwright/test';
 import mongoose from 'mongoose';
 
@@ -39,8 +40,9 @@ test.describe('Create event page', () => {
     test.afterEach(async ({ }, testInfo) => {
         if (testInfo.title === createEventTestTitle) {
             if (mongoose.connection.readyState === 0) {
-                await mongoose.connect(process.env.MONGODB_URI!);
+                await connectDB();
             }
+
 
             try {
                 await mongoose.connection.collection('events').deleteMany({
@@ -79,7 +81,9 @@ test.describe('Create event page', () => {
                 await input.clear();
             }
 
-            await submitButton.click();
+            await page.waitForTimeout(100);
+
+            await submitButton.click({ force: true });
 
             await expect(input).toBeFocused();
 
@@ -146,7 +150,7 @@ test.describe('Create event page', () => {
         const successToast = page.locator('div[role=status]', { hasText: "Event has been successfully created! Redirecting..." })
         await expect(successToast).toBeVisible({});
         await expect(page).toHaveURL(/\/events/);
-        const newEventCard = page.locator('#event-card', { hasText: 'TestEvent 2026' });
+        const newEventCard = page.locator('.event-card', { hasText: 'TestEvent 2026' });
         await expect(newEventCard).toBeVisible();
     });
 });

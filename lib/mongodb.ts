@@ -42,6 +42,8 @@ async function connectDB(): Promise<typeof mongoose> {
         }
         const options = {
             bufferCommands: false, // Disable Mongoose buffering
+            serverSelectionTimeoutMS: 5000,
+            connectTimeoutMS: 5000,
         };
 
         // Create a new connection promise

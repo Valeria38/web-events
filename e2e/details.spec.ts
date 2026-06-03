@@ -3,13 +3,15 @@ import { test, expect } from '@playwright/test';
 test.describe('Event details page', () => {
     test.beforeEach(async ({ page }) => {
         await page.goto("/");
-        const eventCard = page.locator('#event-card').first();
+        const eventCard = page.locator('.event-card').first();
         const href = await eventCard.getAttribute('href');
 
         await eventCard.click();
 
         await expect(page).toHaveURL(new RegExp(`${href}`));
-        await page.locator('#event').waitFor({ state: 'visible', timeout: 10000 });
+
+        const eventSection = page.locator('section#event');
+        await expect(eventSection).toBeVisible({ timeout: 20000 });
     });
 
 

@@ -7,7 +7,11 @@ async function clear() {
         process.exit(1);
     }
 
-    await mongoose.connect(uri);
+    await mongoose.connect(uri, {
+        bufferCommands: false,
+        serverSelectionTimeoutMS: 5000,
+        connectTimeoutMS: 5000,
+    })
 
     const result = await mongoose.connection.collection('events').deleteOne({
         slug: 'ci-build-test-event'
@@ -19,7 +23,7 @@ async function clear() {
         console.log('--- [CI CLEAR]: temporary event not found ---');
     }
 
-    await mongoose.disconnect();
+    await mongoose.connection.close();
 }
 
 clear().catch((err) => {

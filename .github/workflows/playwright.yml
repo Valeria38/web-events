@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL }}
     steps:
     - uses: actions/checkout@v4
     

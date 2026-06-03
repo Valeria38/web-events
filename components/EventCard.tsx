@@ -23,7 +23,7 @@ const EventCard = ({
     idx,
 }: Props) => {
     return (
-        <Link href={`/events/${slug}`} id="event-card">
+        <Link href={`/events/${slug}`} className="event-card">
             <div>
                 <Image
                     src={image}

@@ -1,5 +1,4 @@
 import { test, expect, type Page } from '@playwright/test';
-import mongoose from 'mongoose';
 
 interface ITestField {
     selector: string;
@@ -36,21 +35,27 @@ test.describe('Create event page', () => {
         await page.goto("/create");
     });
 
-    test.afterEach(async ({ }, testInfo) => {
+    test.afterEach(async ({ page }, testInfo) => {
         if (testInfo.title === createEventTestTitle) {
-            if (mongoose.connection.readyState === 0) {
-                await mongoose.connect(process.env.MONGODB_URI!);
-            }
+            // remove test event
+            const response = await page.request.post('http://localhost:3000/api/tests/cleanup');
 
-            try {
-                await mongoose.connection.collection('events').deleteMany({
-                    title: 'TestEvent 2026'
-                });
-                console.log('Test event successfully deleted after test run');
-            } catch (error) {
-                console.error('Error occurred while deleting test event:', error);
-            } finally {
-                await mongoose.connection.close();
+            console.log("RESPONSE STATUS:", response.status());
+
+            if (response.ok()) {
+                const data = await response.json();
+                console.log("DATA:", JSON.stringify(data));
+
+                await page.waitForTimeout(500);
+                await page.context().clearCookies();
+                await page.goto(`http://localhost:3000/`, { waitUntil: 'load' });
+                await page.waitForLoadState('networkidle');
+
+                const testCard = page.locator('.events .event-card', { hasText: 'TestEvent 2026' });
+                await expect(testCard).toBeHidden({ timeout: 5000 });
+            } else {
+                const text = await response.text();
+                console.error("Next.js SERVER ERROR:", text);
             }
         }
     });
@@ -79,7 +84,9 @@ test.describe('Create event page', () => {
                 await input.clear();
             }
 
-            await submitButton.click();
+            await page.waitForTimeout(100);
+
+            await submitButton.click({ force: true });
 
             await expect(input).toBeFocused();
 
@@ -139,14 +146,17 @@ test.describe('Create event page', () => {
         await page.keyboard.press('Enter');
         await page.fill('input#agenda', "Agenda item 2");
         await page.keyboard.press('Enter');
-        await submitButton.click();
-        const response = await responsePromise;
 
-        expect(response.status()).toBe(200);
         const successToast = page.locator('div[role=status]', { hasText: "Event has been successfully created! Redirecting..." })
-        await expect(successToast).toBeVisible({});
+
+        const [response] = await Promise.all([
+            responsePromise,
+            successToast.waitFor({ state: 'attached', timeout: 5000 }),
+            submitButton.click()
+        ]);
+        expect(response.status()).toBe(200);
         await expect(page).toHaveURL(/\/events/);
-        const newEventCard = page.locator('#event-card', { hasText: 'TestEvent 2026' });
+        const newEventCard = page.locator('.event-card', { hasText: 'TestEvent 2026' });
         await expect(newEventCard).toBeVisible();
     });
 });

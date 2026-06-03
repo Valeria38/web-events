@@ -34,7 +34,7 @@ const EventCard = ({
                     priority={idx <= 3}
                     sizes="(max-width: 639px) 100vw, (max-width: 767px) 50vw, 33.3vw"
                 />
-                <div className="flex flex-row gap-2">
+                <div className="flex flex-row gap-2 pt-3">
                     <Image
                         src="/icons/pin.svg"
                         alt="location"

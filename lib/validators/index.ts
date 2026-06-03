@@ -34,11 +34,11 @@ export const eventSchema = z.object({
     venue: z
         .string()
         .min(3, "Venue must be at least 3 characters")
-        .max(20, "Venue canot exceed 20 characters"),
+        .max(30, "Venue cannot exceed 30 characters"),
     location: z
         .string()
         .min(3, "Location is required")
-        .max(30, "Venue canot exceed 30 characters"),
+        .max(30, "Location canot exceed 30 characters"),
     date: z.string().min(1, "Date is required"),
     time: z.string().min(1, "Time is required"),
     audience: z
@@ -51,7 +51,7 @@ export const eventSchema = z.object({
     organizer: z
         .string()
         .min(1, "Organizer is required")
-        .max(20, "Organizer canot exceed 20 characters"),
+        .max(30, "Organizer canot exceed 30 characters"),
     tags: z.array(z.string()).nonempty("At least one tag is required"),
     mode: z.string().refine((val) => CATEGORIES.includes(val), {
         message: "Invalid category",

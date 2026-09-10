@@ -11,7 +11,7 @@ const BookEvent = ({ eventId, slug }: IBookEventProps) => {
     const [email, setEmail] = useState("");
     const [submitted, setSubmitted] = useState(false);
 
-    const handleSubmit = async (e: React.SubmitEvent) => {
+    const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         const { success, error } = await createBooking({
             eventId,
@@ -27,7 +27,7 @@ const BookEvent = ({ eventId, slug }: IBookEventProps) => {
     return (
         <div id="book-event">
             {submitted ? (
-                <p className="text-sm">Thank you for signing up!</p>
+                <p className="text-sm" data-testid="success-message">Thank you for signing up!</p>
             ) : (
                 <form onSubmit={handleSubmit}>
                     <div>

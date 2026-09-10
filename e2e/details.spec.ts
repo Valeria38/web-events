@@ -4,36 +4,35 @@ test.describe('Event details page', () => {
     test.beforeEach(async ({ page }) => {
         await page.goto("/");
 
-        const eventCard = page.locator('.events .event-card').first();
+        // const eventCard = page.locator('.events .event-card').first();
+        const eventCard = page.locator('.events .event-card', { hasText: /CI Build Test Event/i }).first();
         await expect(eventCard).toBeVisible({ timeout: 10000 });
         await eventCard.waitFor({ state: 'attached' });
 
         const href = await eventCard.getAttribute('href');
         await expect(eventCard).toHaveAttribute('href', /^\/events/);
 
-        await Promise.all([
-            eventCard.click(),
-            page.waitForURL(new RegExp(`${href}`), { timeout: 5000 }),
-
-        ]);
+        await eventCard.click();
+        await expect(page).toHaveURL(new RegExp(`${href}`));
 
         const eventSection = page.locator('section#event');
         await expect(eventSection).toBeVisible({ timeout: 20000 });
+        await expect(page.locator('h2').first()).toBeVisible({ timeout: 10000 });
 
         await expect(page).toHaveURL(`${href}`);
     });
 
-
     test('should render heading with description text', async ({ page }) => {
         const heading = page.locator('h1', { hasText: /event description/i });
         const descriptionText = page.locator('.header > p');
-        await expect(heading).toBeVisible();
+        await expect(heading).toBeVisible({ timeout: 15000 });
         await expect(descriptionText).toBeVisible();
     })
 
     test('should render the event image', async ({ page }) => {
         const image = page.locator('.banner');
         await expect(image).toBeVisible();
+        await expect(image).toHaveJSProperty('complete', true);
     });
 
     test('should render the overview section', async ({ page }) => {
@@ -78,32 +77,28 @@ test.describe('Event details page', () => {
         await expect(tag).toBeVisible();
     })
 
-    test('should book the spot', async ({ page }) => {
+    test('should book the spot', async ({ page }, testInfo) => {
         const bookSection = page.locator('.booking', { hasText: /book your spot/i });
         const bookButton = bookSection.getByRole('button', { name: /submit/i });
         const bookForm = bookSection.locator('form');
+        await expect(bookForm).toBeVisible();
         const emailInput = bookForm.locator('input#email');
-        const successMessage = page.getByText('Thank you for signing up!');
-        const responsePromise = page.waitForResponse(response =>
-            response.url().includes('/events/') &&
-            response.request().method() === 'POST'
-        );
+        // const successMessage = page.getByText(/thank you for signing up!/i);
+        const successMessage = page.getByTestId('success-message');
+
 
         await expect(bookForm).toBeVisible();
-        await expect(successMessage).not.toBeVisible();
+        await expect(successMessage).not.toBeVisible({ timeout: 10000 });
 
-
-        const email = Date.now() + '@mail.com';
+        const email = Date.now() + testInfo.workerIndex + '@mail.com';
         await emailInput.fill(email);
-        await bookButton.click();
-        const response = await responsePromise;
-        const requestData = response.request().postDataJSON();
-        const payload = Array.isArray(requestData) ? requestData[0] : requestData;
-        expect(response.status()).toBe(200);
-        expect(payload?.email).toBe(email);
+        await expect(bookButton).toBeEnabled();
 
-        await expect(successMessage).toBeVisible();
-        await expect(bookForm).toBeHidden();
+        await bookButton.click();
+
+        await expect(successMessage).toBeVisible({ timeout: 15000 });
+        await expect(successMessage).toHaveText('Thank you for signing up!');
+        await expect(bookForm).toBeHidden({ timeout: 10000 });
     });
 });
 

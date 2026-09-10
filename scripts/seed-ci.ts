@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import mongoose from 'mongoose';
 
 async function seed() {
@@ -18,7 +19,7 @@ async function seed() {
         slug: 'ci-build-test-event',
         description: 'Test event created during CI build to ensure that the database is not empty and static params can be generated successfully.',
         overview: 'Test overview for CI build event.',
-        image: 'Test image URL',
+        image: 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4',
         venue: 'Test Venue',
         location: 'Test Location',
         date: new Date().toISOString().split('T')[0],

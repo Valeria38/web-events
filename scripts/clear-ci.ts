@@ -1,4 +1,6 @@
+import 'dotenv/config';
 import mongoose from 'mongoose';
+
 
 async function clear() {
     const uri = process.env.MONGODB_URI;

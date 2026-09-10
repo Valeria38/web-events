@@ -153,8 +153,10 @@ test.describe('Create event page', () => {
             submitButton.click()
         ]);
         expect(response.status()).toBe(200);
-        await expect(page).toHaveURL(/\/events/);
+        await expect(page).toHaveURL(/\/events/, { timeout: 15000 });
+        await page.waitForLoadState('networkidle');
+        // await page.reload();
         const newEventCard = page.locator('.event-card', { hasText: 'TestEvent 2026' });
-        await expect(newEventCard).toBeVisible();
+        await expect(newEventCard).toBeVisible({ timeout: 15000 });
     });
 });

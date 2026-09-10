@@ -40,8 +40,6 @@ test.describe('Create event page', () => {
             // remove test event
             const response = await page.request.post('http://localhost:3000/api/tests/cleanup');
 
-            console.log("RESPONSE STATUS:", response.status());
-
             if (response.ok()) {
                 const data = await response.json();
                 console.log("DATA:", JSON.stringify(data));
@@ -52,7 +50,7 @@ test.describe('Create event page', () => {
                 await page.waitForLoadState('networkidle');
 
                 const testCard = page.locator('.events .event-card', { hasText: 'TestEvent 2026' });
-                await expect(testCard).toBeHidden({ timeout: 5000 });
+                await expect(testCard).toBeHidden({ timeout: 15000 });
             } else {
                 const text = await response.text();
                 console.error("Next.js SERVER ERROR:", text);

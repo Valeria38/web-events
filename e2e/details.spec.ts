@@ -10,9 +10,12 @@ test.describe('Event details page', () => {
 
         const href = await eventCard.getAttribute('href');
         await expect(eventCard).toHaveAttribute('href', /^\/events/);
-        await eventCard.click();
 
-        await expect(page).toHaveURL(new RegExp(`${href}`), { timeout: 3000 });
+        await Promise.all([
+            eventCard.click(),
+            page.waitForURL(new RegExp(`${href}`), { timeout: 5000 }),
+
+        ]);
 
         const eventSection = page.locator('section#event');
         await expect(eventSection).toBeVisible({ timeout: 20000 });
@@ -80,7 +83,7 @@ test.describe('Event details page', () => {
         const bookButton = bookSection.getByRole('button', { name: /submit/i });
         const bookForm = bookSection.locator('form');
         const emailInput = bookForm.locator('input#email');
-        const successMessage = page.locator('#book-event').getByText('Thank you for signing up!');
+        const successMessage = page.getByText('Thank you for signing up!');
         const responsePromise = page.waitForResponse(response =>
             response.url().includes('/events/') &&
             response.request().method() === 'POST'

@@ -15,6 +15,9 @@ async function clear() {
         connectTimeoutMS: 5000,
     })
 
+    const bookingResult = await mongoose.connection.collection('bookings').deleteMany({});
+    console.log(`--- [CI CLEAR]: deleted ${bookingResult.deletedCount} bookings ---`);
+
     const result = await mongoose.connection.collection('events').deleteOne({
         slug: 'ci-build-test-event'
     });

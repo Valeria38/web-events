@@ -35,7 +35,6 @@ export const getEventDetails = async (slug: string) => {
     cacheLife("minutes");
     try {
         await connectDB();
-        // const { slug } = await params;
 
         if (!slug || typeof slug !== "string" || slug.trim() === "") {
             return null;

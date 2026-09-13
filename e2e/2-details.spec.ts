@@ -78,23 +78,26 @@ test.describe('Event details page', () => {
     })
 
     test('should book the spot', async ({ page }, testInfo) => {
+        page.on('console', msg => {
+            if (msg.type() === 'error') console.log('BROWSER CONSOLE ERROR:', msg.text());
+        });
         const bookSection = page.locator('.booking', { hasText: /book your spot/i });
         const bookButton = bookSection.getByRole('button', { name: /submit/i });
         const bookForm = bookSection.locator('form');
         await expect(bookForm).toBeVisible();
         const emailInput = bookForm.locator('input#email');
-        // const successMessage = page.getByText(/thank you for signing up!/i);
-        const successMessage = page.getByTestId('success-message');
-
+        const successMessage = page.getByText(/thank you for signing up!/i);
 
         await expect(bookForm).toBeVisible();
         await expect(successMessage).not.toBeVisible({ timeout: 10000 });
 
-        const email = Date.now() + testInfo.workerIndex + '@mail.com';
+        const uniqueSuffix = `${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+        const email = `test-${uniqueSuffix}@mail.com`;
+        // const email = Date.now() + testInfo.workerIndex + '@mail.com';
         await emailInput.fill(email);
         await expect(bookButton).toBeEnabled();
 
-        await bookButton.click({ force: true });
+        await bookButton.click();
 
         await expect(successMessage).toBeVisible({ timeout: 15000 });
         await expect(successMessage).toHaveText('Thank you for signing up!');

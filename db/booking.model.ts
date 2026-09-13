@@ -38,32 +38,53 @@ const BookingSchema = new Schema<IBooking>(
 );
 
 // Pre-save hook to validate events exists before creating booking
-BookingSchema.pre("save", async function (next) {
+BookingSchema.pre("save", async function () {
     const booking = this as IBooking;
 
-    // Only validate eventId if it's new or modified
     if (booking.isModified("eventId") || booking.isNew) {
-        try {
-            const eventExists = await Event.findById(booking.eventId).select(
-                "_id"
-            );
+        if (!Types.ObjectId.isValid(booking.eventId)) {
+            const err: any = new Error(`Invalid event ID format: ${booking.eventId}`);
+            err.name = "ValidationError";
+            throw err;
+        }
 
-            if (!eventExists) {
-                const error = new Error(
-                    `Event with ID ${booking.eventId} does not exist`
-                );
-                error.name = "ValidationError";
-                return next(error);
-            }
-        } catch {
-            const validationError = new Error(
-                "Invalid events ID format or database error"
-            );
-            validationError.name = "ValidationError";
-            return next(validationError);
+        const eventExists = await Event.findById(booking.eventId).select("_id").lean();
+
+        if (!eventExists) {
+            const err: any = new Error(`Event with ID ${booking.eventId} does not exist`);
+            err.name = "ValidationError";
+            throw err;
         }
     }
 });
+// BookingSchema.pre("save", async function () {
+//     const booking = this as IBooking;
+
+//     // Only validate eventId if it's new or modified
+//     if (booking.isModified("eventId") || booking.isNew) {
+//         try {
+//             const targetEventId = new Types.ObjectId(booking.eventId);
+//             const eventExists = await Event.findById(targetEventId).select(
+//                 "_id"
+//             );
+
+//             if (!eventExists) {
+//                 const error = new Error(
+//                     `Event with ID ${booking.eventId} does not exist`
+//                 );
+//                 error.name = "ValidationError";
+//                 throw error;
+//             }
+//         } catch (err: any) {
+//             console.error("HOOK ERROR:", err);
+//             const validationError = new Error(
+//                 "Invalid events ID format or database error"
+//             );
+//             validationError.name = "ValidationError";
+//             throw validationError;
+//         }
+//     }
+// });
 
 // Create index on eventId for faster queries
 BookingSchema.index({ eventId: 1 });

@@ -1,29 +1,28 @@
 "use server";
 import Booking from "@/db/booking.model";
 import connectDB from "../mongodb";
+import { Event } from "@/db";
 
-export async function createBooking({
-    eventId,
-    slug,
-    email,
-}: {
-    eventId: string;
-    slug: string;
-    email: string;
-}) {
+interface IBookingActionResponse {
+    success: boolean;
+    error?: string;
+}
+
+export async function createBooking(params: { eventId: string; email: string }): Promise<IBookingActionResponse> {
     try {
         await connectDB();
-        const booking = await Booking.create({ eventId, slug, email });
-        return { success: true, booking: JSON.parse(JSON.stringify(booking)) };
-    } catch (error) {
-        console.error("Create booking failed", error);
-        if (process.env.CI) {
-            console.log("======================================");
-            console.log("CRITICAL MONGODB ERROR IN CI:");
-            console.log(error instanceof Error ? error.stack : error);
-            console.log("======================================");
-            process.exit(1);
-        }
-        return { success: false, error };
+
+        await Booking.create({
+            eventId: params.eventId,
+            email: params.email,
+        });
+
+        return { success: true };
+
+    } catch (err: any) {
+        return {
+            success: false,
+            error: err instanceof Error ? err.message : String(err)
+        };
     }
 }

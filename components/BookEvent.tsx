@@ -10,9 +10,11 @@ interface IBookEventProps {
 const BookEvent = ({ eventId, slug }: IBookEventProps) => {
     const [email, setEmail] = useState("");
     const [submitted, setSubmitted] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setErrorMessage(null);
         const { success, error } = await createBooking({
             eventId,
             slug,
@@ -21,11 +23,17 @@ const BookEvent = ({ eventId, slug }: IBookEventProps) => {
         if (success) {
             setSubmitted(true);
         } else {
+            setErrorMessage(typeof error === 'string'
+                ? error
+                : (error instanceof Error ? error.message : JSON.stringify(error, Object.getOwnPropertyNames(error))));
             console.error(["Booking creation failed", error]);
         }
     };
     return (
         <div id="book-event">
+            {errorMessage && (
+                <p className="text-red-500" data-testid="error-message">{errorMessage}</p>
+            )}
             {submitted ? (
                 <p className="text-sm" data-testid="success-message">Thank you for signing up!</p>
             ) : (

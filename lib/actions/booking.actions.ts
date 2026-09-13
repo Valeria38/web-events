@@ -1,6 +1,8 @@
 "use server";
 import Booking from "@/db/booking.model";
 import connectDB from "../mongodb";
+import { Event } from "@/db";
+
 
 export async function createBooking({
     eventId,
@@ -13,6 +15,10 @@ export async function createBooking({
 }) {
     try {
         await connectDB();
+        const eventExists = await Event.findById(eventId);
+        if (!eventExists) {
+            return { success: false, error: "Event does not exist" };
+        }
         const booking = await Booking.create({ eventId, slug, email });
         return { success: true, booking: JSON.parse(JSON.stringify(booking)) };
     } catch (error) {
@@ -22,7 +28,7 @@ export async function createBooking({
             console.log("CRITICAL MONGODB ERROR IN CI:");
             console.log(error instanceof Error ? error.stack : error);
             console.log("======================================");
-            process.exit(1);
+            // process.exit(1);
         }
         return { success: false, error };
     }

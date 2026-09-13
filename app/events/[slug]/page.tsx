@@ -2,7 +2,7 @@ import BookEvent from "@/components/BookEvent";
 import SimilarEvents from "@/components/SimilarEvents";
 import { IEvent, Event } from "@/db";
 import connectDB from "@/lib/mongodb";
-import { getEventDetails, getEvents } from "@/lib/queries/events";
+import { getEventDetails, } from "@/lib/queries/events";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";

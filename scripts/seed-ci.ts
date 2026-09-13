@@ -14,6 +14,10 @@ async function seed() {
         connectTimeoutMS: 5000,
     })
 
+    const deletedEvents = await mongoose.connection.collection('events').deleteOne({ slug: 'ci-build-test-event' });
+    const deletedBookings = await mongoose.connection.collection('bookings').deleteMany({});
+    console.log(`Cleanup before seed: deleted ${deletedEvents.deletedCount} event(s) and ${deletedBookings.deletedCount} booking(s).`);
+
     await mongoose.connection.collection('events').insertOne({
         title: 'CI Build Test Event',
         slug: 'ci-build-test-event',

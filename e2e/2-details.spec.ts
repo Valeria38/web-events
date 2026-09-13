@@ -90,11 +90,13 @@ test.describe('Event details page', () => {
         await expect(bookForm).toBeVisible();
         await expect(successMessage).not.toBeVisible({ timeout: 10000 });
 
-        const email = Date.now() + testInfo.workerIndex + '@mail.com';
+        const uniqueSuffix = `${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+        const email = `test-${uniqueSuffix}@mail.com`;
+        // const email = Date.now() + testInfo.workerIndex + '@mail.com';
         await emailInput.fill(email);
         await expect(bookButton).toBeEnabled();
 
-        await bookButton.click({ force: true });
+        await bookButton.click();
 
         await expect(successMessage).toBeVisible({ timeout: 15000 });
         await expect(successMessage).toHaveText('Thank you for signing up!');

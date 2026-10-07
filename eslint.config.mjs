@@ -1,13 +1,11 @@
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
-import prettierConfig from 'eslint-plugin-prettier/recommended';
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import sonarjs from "eslint-plugin-sonarjs";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
-  prettierConfig,
   sonarjs.configs.recommended,
   {
     plugins: {

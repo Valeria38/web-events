@@ -1,4 +1,5 @@
-import React, { Activity, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import { Activity } from 'react';
 
 interface IInputErrorProps {
   isHidden: boolean;

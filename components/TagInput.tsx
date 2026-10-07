@@ -1,6 +1,7 @@
 'use client';
 import { X } from 'lucide-react';
-import { FocusEvent, KeyboardEvent, useState } from 'react';
+import type { FocusEvent, KeyboardEvent } from 'react';
+import { useState } from 'react';
 
 import InputError from './InputError';
 

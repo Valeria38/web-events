@@ -58,39 +58,11 @@ BookingSchema.pre('save', async function () {
     }
   }
 });
-// BookingSchema.pre("save", async function () {
-//     const booking = this as IBooking;
-
-//     // Only validate eventId if it's new or modified
-//     if (booking.isModified("eventId") || booking.isNew) {
-//         try {
-//             const targetEventId = new Types.ObjectId(booking.eventId);
-//             const eventExists = await Event.findById(targetEventId).select(
-//                 "_id"
-//             );
-
-//             if (!eventExists) {
-//                 const error = new Error(
-//                     `Event with ID ${booking.eventId} does not exist`
-//                 );
-//                 error.name = "ValidationError";
-//                 throw error;
-//             }
-//         } catch (err: any) {
-//             console.error("HOOK ERROR:", err);
-//             const validationError = new Error(
-//                 "Invalid events ID format or database error"
-//             );
-//             validationError.name = "ValidationError";
-//             throw validationError;
-//         }
-//     }
-// });
 
 // Create index on eventId for faster queries
 BookingSchema.index({ eventId: 1 });
 
-// Create compound index for common queries (events bookings by date)
+// Create compound index for common queries (events bookings by date
 BookingSchema.index({ eventId: 1, createdAt: -1 });
 
 // Create index on email for user booking lookups

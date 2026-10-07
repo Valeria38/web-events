@@ -6,7 +6,7 @@ type MongooseCache = {
   promise: Promise<typeof mongoose> | null;
 };
 
-// Extend the global object to include our mongoose cache
+// Extend the global object to include mongoose cache
 declare global {
   var mongoose: MongooseCache | undefined;
 }

@@ -1,3 +1,4 @@
+import type { Types } from 'mongoose';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
@@ -11,10 +12,10 @@ import { getEventDetails } from '@/lib/queries/events';
 export async function generateStaticParams() {
   try {
     await connectDB();
-    const events = await Event.find({}, 'slug').lean();
+    const events: { _id: Types.ObjectId; slug: string }[] = await Event.find({}, 'slug').lean();
 
     return events.map(({ slug }) => ({
-      slug: slug.toString(),
+      slug,
     }));
   } catch (error) {
     console.error('Error while generating static params:', error);
@@ -26,7 +27,7 @@ const EventDetailItem = ({
   icon,
   alt,
   label,
-  testId,
+  testId = '',
 }: {
   icon: string;
   alt: string;
@@ -81,7 +82,6 @@ const EventDetails = async ({ params }: { params: Promise<{ slug: string }> }) =
     organizer,
     tags,
   } = event;
-
   return (
     <section id="event">
       <div className="header">
@@ -125,7 +125,7 @@ const EventDetails = async ({ params }: { params: Promise<{ slug: string }> }) =
             ) : (
               <p className="text-sm">Be the first to book your spot!</p>
             )}
-            <BookEvent eventId={event._id} />
+            <BookEvent eventId={event._id.toString()} />
           </div>
         </aside>
       </div>

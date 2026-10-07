@@ -4,7 +4,8 @@ import { useActionState, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 
 import { CATEGORIES } from '@/app/constants';
-import { ActionState, ActionStateStatus, createEvent } from '@/lib/actions/event.actions';
+import type { ActionState } from '@/lib/actions/event.actions';
+import { createEvent } from '@/lib/actions/event.actions';
 
 import AgendaInput from './AgendaInput';
 import ImageInput from './ImageInput';
@@ -15,7 +16,7 @@ import TagInput from './TagInput';
 const initialState: ActionState = {
   message: '',
   success: false,
-  status: 'idle' as ActionStateStatus,
+  status: 'idle',
   errors: {},
   inputs: {},
   timestamp: 0,
@@ -29,6 +30,10 @@ const CreateEventForm = () => {
 
   const { push } = useRouter();
   const hasError = (fieldName: keyof typeof state.errors) => !!state?.errors?.[fieldName];
+  const inputClass = (fieldName: keyof typeof state.errors, extra = '') =>
+    `bg-neutral-900 border p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] ${
+      hasError(fieldName) ? 'border-red-700' : 'border-neutral-700'
+    } ${extra}`;
 
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout> | undefined;
@@ -43,8 +48,12 @@ const CreateEventForm = () => {
         setFormKey((prev) => prev + 1);
       }, 1000);
     }
+    if (state?.status === 'error') {
+      console.log('Event creation error: ', state?.errors);
+      toast.error('Event creation failed. Please check errors in the form fields.');
+    }
     return () => clearTimeout(timeoutId);
-  }, [state?.timestamp, state?.status, push]);
+  }, [state?.timestamp, state?.status, state?.errors, push]);
 
   return (
     <section>
@@ -62,11 +71,9 @@ const CreateEventForm = () => {
               id="title"
               name="title"
               required
-              defaultValue={(state?.inputs?.title as string) || ''}
+              defaultValue={typeof state?.inputs?.title === 'string' ? state?.inputs?.title : ''}
               placeholder="Enter title"
-              className={`${
-                hasError('title') ? 'border-red-700 ' : 'border-neutral-700'
-              } bg-neutral-900 border border-neutral-700 p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] transition`}
+              className={inputClass('title', 'transition')}
             />
             <InputError isHidden={!hasError('title')}>{state?.errors?.title?.[0]}</InputError>
           </div>
@@ -82,10 +89,8 @@ const CreateEventForm = () => {
                 required
                 name="date"
                 type="date"
-                defaultValue={(state?.inputs?.date as string) || ''}
-                className={`${
-                  hasError('date') ? 'border-red-700 ' : 'border-neutral-700'
-                } w-full bg-neutral-900 border border-neutral-700 p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] custom-date-input`}
+                defaultValue={typeof state?.inputs?.date === 'string' ? state?.inputs?.date : ''}
+                className={inputClass('date', 'custom-date-input')}
               />
 
               <InputError isHidden={!hasError('date')}>{state?.errors?.date?.[0]}</InputError>
@@ -99,10 +104,10 @@ const CreateEventForm = () => {
                 required
                 name="location"
                 placeholder="Venue or Link"
-                defaultValue={(state?.inputs?.location as string) || ''}
-                className={`bg-neutral-900 border ${
-                  hasError('location') ? 'border-red-700 ' : 'border-neutral-700'
-                } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7]`}
+                defaultValue={
+                  typeof state?.inputs?.location === 'string' ? state?.inputs?.location : ''
+                }
+                className={inputClass('location')}
               />
               <InputError isHidden={!hasError('location')}>
                 {state?.errors?.location?.[0]}
@@ -119,11 +124,11 @@ const CreateEventForm = () => {
               required
               name="description"
               placeholder="Short summary..."
-              defaultValue={(state?.inputs?.description as string) || ''}
+              defaultValue={
+                typeof state?.inputs?.description === 'string' ? state?.inputs?.description : ''
+              }
               rows={3}
-              className={`bg-neutral-900 border ${
-                hasError('description') ? 'border-red-700 ' : 'border-neutral-700'
-              } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] resize-none`}
+              className={inputClass('description', 'resize-none')}
             />
             <InputError isHidden={!hasError('description')}>
               {state?.errors?.description?.[0]}
@@ -138,12 +143,12 @@ const CreateEventForm = () => {
               id="overview"
               required
               name="overview"
-              defaultValue={(state?.inputs?.overview as string) || ''}
+              defaultValue={
+                typeof state?.inputs?.overview === 'string' ? state?.inputs?.overview : ''
+              }
               placeholder="Detailed information..."
               rows={5}
-              className={`bg-neutral-900 border ${
-                hasError('overview') ? 'border-red-700 ' : 'border-neutral-700'
-              } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] resize-none`}
+              className={inputClass('overview', 'resize-none')}
             />
             <InputError isHidden={!hasError('overview')}>{state?.errors?.overview?.[0]}</InputError>
           </div>
@@ -155,11 +160,11 @@ const CreateEventForm = () => {
               id="organizer"
               name="organizer"
               required
-              defaultValue={(state?.inputs?.organizer as string) || ''}
+              defaultValue={
+                typeof state?.inputs?.organizer === 'string' ? state?.inputs?.organizer : ''
+              }
               placeholder="e.g. Google Cloud organizes events..."
-              className={`bg-neutral-900 border ${
-                hasError('organizer') ? 'border-red-700 ' : 'border-neutral-700'
-              } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7]`}
+              className={inputClass('organizer')}
             />
             <InputError isHidden={!hasError('organizer')}>
               {state?.errors?.organizer?.[0]}
@@ -177,11 +182,9 @@ const CreateEventForm = () => {
               id="venue"
               name="venue"
               required
-              defaultValue={(state?.inputs?.venue as string) || ''}
+              defaultValue={typeof state?.inputs?.venue === 'string' ? state?.inputs?.venue : ''}
               placeholder="e.g. Moscone Center"
-              className={`bg-neutral-900 border ${
-                hasError('venue') ? 'border-red-700 ' : 'border-neutral-700'
-              } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] transition`}
+              className={inputClass('venue', 'transition')}
             />
             <InputError isHidden={!hasError('venue')}>{state?.errors?.venue?.[0]}</InputError>
           </div>
@@ -193,11 +196,9 @@ const CreateEventForm = () => {
               id="time"
               name="time"
               required
-              defaultValue={(state?.inputs?.time as string) || ''}
+              defaultValue={typeof state?.inputs?.time === 'string' ? state?.inputs?.time : ''}
               placeholder="8:00"
-              className={`bg-neutral-900 border ${
-                hasError('time') ? 'border-red-700 ' : 'border-neutral-700'
-              } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] transition`}
+              className={inputClass('time', 'transition')}
             />
             <InputError isHidden={!hasError('time')}>{state?.errors?.time?.[0]}</InputError>
           </div>
@@ -209,11 +210,11 @@ const CreateEventForm = () => {
               id="audience"
               name="audience"
               required
-              defaultValue={(state?.inputs?.audience as string) || ''}
+              defaultValue={
+                typeof state?.inputs?.audience === 'string' ? state?.inputs?.audience : ''
+              }
               placeholder="Cloud engineers, DevOps"
-              className={`bg-neutral-900 border ${
-                hasError('audience') ? 'border-red-700 ' : 'border-neutral-700'
-              } p-3 rounded-xl text-white outline-none focus:border-[#6EE7B7] transition`}
+              className={inputClass('audience', 'transition')}
             />
             <InputError isHidden={!hasError('audience')}>{state?.errors?.audience?.[0]}</InputError>
           </div>
@@ -224,9 +225,7 @@ const CreateEventForm = () => {
             <select
               id="mode"
               name="mode"
-              className={`bg-neutral-900 border p-3 rounded-xl outline-none focus:border-[#6EE7B7] appearance-none cursor-pointer ${
-                hasError('mode') ? 'border-red-700 ' : 'border-neutral-700'
-              }`}
+              className={inputClass('mode', 'appearance-none cursor-pointer')}
             >
               {CATEGORIES.map((category) => (
                 <option key={category} value={category}>

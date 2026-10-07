@@ -19,7 +19,7 @@ export const eventSchema = z.object({
     .min(10, 'Overview must be at least 10 characters')
     .max(500, 'Overview cannot exceed 500 characters'),
   image: z
-    .any()
+    .instanceof(File, { message: 'Image is required' })
     .refine((file) => file?.size > 0, 'Image is required')
     .refine((file) => file?.size <= MAX_FILE_SIZE, `Maximum size is 4.5MB`)
     .refine(
@@ -46,7 +46,7 @@ export const eventSchema = z.object({
     .min(1, 'Organizer is required')
     .max(30, 'Organizer canot exceed 30 characters'),
   tags: z.array(z.string()).nonempty('At least one tag is required'),
-  mode: z.string().refine((val) => CATEGORIES.includes(val), {
+  mode: z.enum(CATEGORIES, {
     message: 'Invalid category',
   }),
 });

@@ -1,6 +1,7 @@
 import { Document, model, models, Schema } from 'mongoose';
 
 import { CATEGORIES } from '@/app/constants';
+import type { Agenda, Tags } from '@/lib/actions/event.actions';
 
 // TypeScript interface for Event document
 export interface IEvent extends Document {
@@ -15,9 +16,9 @@ export interface IEvent extends Document {
   time: string;
   mode: string;
   audience: string;
-  agenda: string[];
+  agenda: Agenda;
   organizer: string;
-  tags: string[];
+  tags: Tags;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -120,7 +121,7 @@ EventSchema.pre('save', async function () {
   }
 
   // Normalize date to ISO format if it's not already
-  if (event.isModified('date')) {
+  if (event.isModified('date') && event.date) {
     event.date = normalizeDate(event.date);
   }
 
@@ -147,7 +148,12 @@ function normalizeDate(dateString: string): string {
   if (isNaN(date.getTime())) {
     throw new Error('Invalid date format');
   }
-  return date.toISOString().split('T')[0]; // Return YYYY-MM-DD format
+  const [isoDate] = date.toISOString().split('T');
+  if (!isoDate) {
+    throw new Error('Failed to format date');
+  }
+
+  return isoDate;
 }
 
 // Helper function to normalize time format
@@ -159,9 +165,14 @@ function normalizeTime(timeString: string): string {
   if (!match) {
     throw new Error('Invalid time format. Use HH:MM or HH:MM AM/PM');
   }
-
-  let hours = parseInt(match[1]);
+  const rawHours = match[1];
   const minutes = match[2];
+
+  if (!rawHours || !minutes) {
+    throw new Error('Invalid time format');
+  }
+
+  let hours = parseInt(rawHours);
   const period = match[4]?.toUpperCase();
 
   if (period) {

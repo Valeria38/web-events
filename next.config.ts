@@ -1,31 +1,32 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-    logging: {
-        browserToTerminal: true,
+  logging: {
+    browserToTerminal: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  cacheComponents: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+    ],
+    qualities: [50, 75],
+  },
+  experimental: {
+    // optimizePackageImports: ['ogl'],
+    serverActions: {
+      bodySizeLimit: '4mb',
     },
-    typescript: {
-        ignoreBuildErrors: true,
-    },
-    cacheComponents: true,
-    images: {
-        remotePatterns: [
-            {
-                protocol: "https",
-                hostname: "res.cloudinary.com",
-            },
-            {
-                protocol: "https",
-                hostname: "images.unsplash.com",
-            }
-        ],
-    },
-    experimental: {
-        // optimizePackageImports: ['ogl'],
-        serverActions: {
-            bodySizeLimit: "4mb",
-        },
-    },
+  },
 };
 
 export default nextConfig;

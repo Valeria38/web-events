@@ -4,50 +4,28 @@ import { v2 as cloudinary } from 'cloudinary';
 import { revalidatePath } from 'next/cache';
 
 import { Event } from '@/db';
-
-import connectDB from '../mongodb';
-import { eventSchema } from '../validators';
+import connectDB from '@/lib/mongodb';
+import { parseJsonArray } from '@/lib/utils/parse';
+import { eventSchema } from '@/lib/validators';
 
 export type ActionStateStatus = 'success' | 'error' | 'idle';
+export type Agenda = string[];
+export type Tags = string[];
 
 export interface ActionState {
   success: boolean;
   message: string;
   status: ActionStateStatus;
   errors: Record<string, string[]>;
-  inputs: Record<string, string | File>;
+  inputs: Record<string, string | File | Agenda | Tags>;
   timestamp: number | null;
 }
 
-export async function createEvent(state: ActionState, formData: FormData) {
-  const image = formData.get('image') as File;
-  const title = formData.get('title') as string;
-  const description = formData.get('description') as string;
-  const date = formData.get('date') as string;
-  const location = formData.get('location') as string;
-  const overview = formData.get('overview') as string;
-  const tags = JSON.parse(formData.get('tags') as string);
-  const agenda = JSON.parse(formData.get('agenda') as string);
-  const venue = formData.get('venue') as string;
-  const time = formData.get('time') as string;
-  const mode = formData.get('mode') as string;
-  const audience = formData.get('audience') as string;
-  const organizer = formData.get('organizer') as string;
-
+export async function createEvent(_: ActionState, formData: FormData): Promise<ActionState> {
   const rawData = {
-    title,
-    description,
-    date,
-    location,
-    overview,
-    tags,
-    agenda,
-    venue,
-    time,
-    mode,
-    audience,
-    organizer,
-    image,
+    ...Object.fromEntries(formData.entries()),
+    tags: parseJsonArray<string>(formData.get('tags')),
+    agenda: parseJsonArray<string>(formData.get('agenda')),
   };
   const validatedFields = eventSchema.safeParse(rawData);
 
@@ -59,12 +37,11 @@ export async function createEvent(state: ActionState, formData: FormData) {
       status: 'error',
       inputs: rawData,
       timestamp: null,
-    } as ActionState;
+    };
   }
   try {
     await connectDB();
-    const file = formData.get('image') as File;
-    if (!file || file.size === 0) throw new Error('File not found');
+    const file = validatedFields.data.image;
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     const uploadResult = await new Promise<{ secure_url: string }>((resolve, reject) => {
@@ -79,7 +56,7 @@ export async function createEvent(state: ActionState, formData: FormData) {
     });
 
     await Event.create({
-      ...rawData,
+      ...validatedFields.data,
       image: uploadResult.secure_url,
     });
 
@@ -92,7 +69,7 @@ export async function createEvent(state: ActionState, formData: FormData) {
       errors: {},
       inputs: {},
       timestamp: Date.now(),
-    } as ActionState;
+    };
   } catch (error: unknown) {
     console.error('Event creation:', error);
     const errorMessage = error instanceof Error ? error.message : 'Something went wrong';
@@ -102,6 +79,7 @@ export async function createEvent(state: ActionState, formData: FormData) {
       status: 'error',
       errors: {},
       inputs: {},
-    } as ActionState;
+      timestamp: null,
+    };
   }
 }

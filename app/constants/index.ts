@@ -1,1 +1,2 @@
-export const CATEGORIES = ["hybrid", "offline", "online"];
+type Categories = 'hybrid' | 'offline' | 'online';
+export const CATEGORIES: Categories[] = ['hybrid', 'offline', 'online'];

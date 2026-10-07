@@ -1,4 +1,4 @@
-import { IEvent } from '@/db';
+import type { IEvent } from '@/db';
 import { getSimilarEventsBySlug } from '@/lib/queries/events';
 
 import EventCard from './EventCard';
@@ -8,7 +8,7 @@ interface ISimilarEventsProps {
 }
 
 const SimilarEvents = async ({ slug }: ISimilarEventsProps) => {
-  const similarEvents: IEvent[] = await getSimilarEventsBySlug(slug);
+  const similarEvents = await getSimilarEventsBySlug(slug);
 
   return (
     <div className="flex w-full flex-col gap-4 pt-20">

@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 
 import { createBooking } from '@/lib/actions/booking.actions';
 
@@ -19,17 +20,18 @@ const BookEvent = ({ eventId }: IBookEventProps) => {
         email,
       });
 
-      if (!result) {
-        return;
-      }
-
-      if (result.success) {
+      if (result?.success) {
         setSubmitted(true);
       } else {
         console.error(['Booking creation failed', result.error]);
+        const message = 'Something went wrong. Please try again later.';
+        toast.error(message);
       }
     } catch (err) {
       console.error('Client action dispatch failed:', err);
+      const message = 'Something went wrong. Please try again later.';
+      console.log('before toast');
+      toast.error(message);
     }
   };
   return (

@@ -1,16 +1,16 @@
-import React, { Activity, FC, ReactNode } from "react";
+import React, { Activity, ReactNode } from 'react';
 
 interface IInputErrorProps {
-    isHidden: boolean;
-    children: ReactNode;
+  isHidden: boolean;
+  children: ReactNode;
 }
 
 const InputError = ({ isHidden, children }: IInputErrorProps) => {
-    return (
-        <Activity mode={isHidden ? "hidden" : "visible"}>
-            <span className="text-red-700 text-sm">{children}</span>
-        </Activity>
-    );
+  return (
+    <Activity mode={isHidden ? 'hidden' : 'visible'}>
+      <span className="text-red-700 text-sm">{children}</span>
+    </Activity>
+  );
 };
 
 export default InputError;
